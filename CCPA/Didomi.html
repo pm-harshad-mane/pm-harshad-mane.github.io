@@ -3,10 +3,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>window.didomiGeoRegulations = [];</script>
     <script>window.didomiCountry = 'US';</script>
-​
     <script type="text/javascript">
     window.gdprAppliesGlobally=true;(function(){function i(e){if(!window.frames[e]){if(document.body&&document.body.firstChild){var t=document.body;var n=document.createElement("iframe");n.style.display="none";n.name=e;n.title=e;t.insertBefore(n,t.firstChild)}else{setTimeout(function(){i(e)},5)}}}function e(n,a,o,e,r){function t(e,t,n){if(typeof n!=="function"){return}if(!window[a]){window[a]=[]}var i=false;if(r){i=r(e,t,n)}if(!i){window[a].push({command:e,parameter:t,callback:n})}}t.stub=true;function i(i){if(!window[n]||window[n].stub!==true){return}if(!i.data){return}var a=typeof i.data==="string";var e;try{e=a?JSON.parse(i.data):i.data}catch(t){return}if(e[o]){var r=e[o];window[n](r.command,r.parameter,function(e,t){var n={};n.postMessageReturn={returnValue:e,success:t,callId:r.callId};i.source.postMessage(a?JSON.stringify(n):n,"*")})}}if(typeof window[n]!=="function"){window[n]=t;if(window.addEventListener){window.addEventListener("message",i,false)}else{window.attachEvent("onmessage",i)}}}e("__uspapi","__uspapiBuffer","__uspapiCall","__uspapiReturn");i("__uspapiLocator");e("__cmp","__cmpBuffer","__cmpCall","__cmpReturn",function(e,t,n){if(e==="ping"){n({gdprAppliesGlobally:window.gdprAppliesGlobally,cmpLoaded:false},true);return true}else{return false}});i("__uspapiLocator")})();
-​
     window.didomiConfig = {
       theme: {
         color: '#D2051E',
@@ -29,10 +27,8 @@
       },
     };
     </script>
-​
     <script type="text/javascript" src="https://sdk.privacy-center.org/loader.js" id="spcloader" async></script>
   </head>
-​
   <body>
     <a class="open-privacy-preferences" href="javascript:Didomi.preferences.show()">Open Privacy preferences (Do Not Sell)</a>
     <br />
