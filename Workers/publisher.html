@@ -6,7 +6,7 @@
 <body>
 	Hello World!
 
-	<script type="text/javascript" src="javascripts/ajax.js"></script>
+	<script type="text/javascript" src="ajax.js"></script>
 
 	<script type="text/javascript">
 
@@ -15,7 +15,7 @@
 		})
 		
 		if (window.Worker) {
-			const myWorker = new Worker("javascripts/worker.js");
+			const myWorker = new Worker("worker.js");
 			myWorker.postMessage([10, 12]);
 			myWorker.onmessage = function(e) {
 				console.log('Message received from worker', e);
