@@ -12,7 +12,7 @@ onmessage = function(e) {
   //   postMessage(workerResult);
   // }
 
-  ajax("http://ssp.com/hello/?sum="+result, function(resp){
+  ajax("https://hbopenbid.pubmatic.com/translator?source=prebid-client", function(resp){
   	const workerResult = 'Result: ' + result;
     console.log('Worker: Posting message back to main script');
     postMessage(workerResult);
