@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Rectangles</title>
+</head>
+<body>
+   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<div id="contentHtml">
+   <p>The calculator below can be used to estimate the maximum number of smaller rectangles - or squares - that may fit into a larger rectangle or square. The calculator can be used to calculate applicatons like</p>
+   <ul>
+      <li>the number of bricks in a wall</li>
+      <li>the number of rectangular cuts possible from a steel or plywood plate&nbsp;</li>
+   </ul>
+   <p>Input the large rectangle <span style="text-decoration: underline;">inside</span> dimensions - and the <span style="text-decoration: underline;">outside</span> dimensions of the smaller rectangles.</p>
+   <p>Default values are for <em>0.5 x 0.8 inch</em> rectangle inside a <em>10 inch x 10 inch</em> square. The calculator is generic and all units can be used - as long as the same units are used for all values.</p>
+   <div>
+      <form>
+         <p style="padding-left: 30px;"><input id="rw" name="rw" value="10" type="number"> <em><strong>large</strong> rectangle width (in, mm, m)</em></p>
+         <p style="padding-left: 30px;"><input id="rh" name="rh" value="10" type="number"> <em><strong>large</strong> rectangle height (in, mm, m)</em></p>
+         <p style="padding-left: 30px;"><input id="sw" name="cd" value="0.8" type="number"> <em><strong>small</strong> rectangles width (in, mm, m)</em></p>
+         <p style="padding-left: 30px;"><input id="sh" name="cd" value="0.5" type="number"> <em><strong>small</strong> rectangles height (in, mm, m)</em></p>
+         <p style="padding-left: 30px;"><input id="cs" name="cs" value="0.1" type="number"> <em>space between small rectangles&nbsp; (in, mm, m)</em></p>
+         <p style="padding-left: 30px;"><input value="calculate!" onclick="calculateRectangle(); " type="button"> <input value="switch large width/height!" onclick="switchSides(); " type="button"></p>
+      </form>
+   </div>
+   <h3>Rectangular Pattern</h3>
+   <p id="results">
+   </p> 
+   <div class="center">
+      <canvas id="myCanvas" width="400" height="400">&nbsp;</canvas>
+   </div>
+   <p id="image1" style="display: none;"><img src="https://www.engineeringtoolbox.com/docs/documents/2111/smaller_rectangles_within_larger_rectangle_square.png" alt="Number of smaller rectangles within a larger rectangle" title="Number of smaller rectangles within a larger rectangle" style="display: block; margin-left: auto; margin-right: auto;" width="414" height="407"></p>
+   <p><strong>Note!</strong> - the algorithm used for this tool is quite simple. Be aware that for some combinations of values more rectangles can be added by rearranging the layout.</p>
+</div>
+</body>
+</html>
