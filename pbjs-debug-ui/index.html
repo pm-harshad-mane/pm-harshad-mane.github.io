@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta
+          name="description"
+          content="Web site created using create-react-app"
+        />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <!--
+          manifest.json provides metadata used when your web app is installed on a
+          user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+        -->
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <!--
+          Notice the use of %PUBLIC_URL% in the tags above.
+          It will be replaced with the URL of the `public` folder during the build.
+          Only files inside the `public` folder can be referenced from the HTML.
+
+          Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+          work correctly both with client-side routing and a non-root public URL.
+          Learn how to configure a non-root public URL by running `npm run build`.
+        -->
+        <title>PBJS DEBUG UI EXAMPLE</title>
+        <!-- React Material UI -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+        <!-- PBJS -->
+        <script async src="//www.googletagservices.com/tag/js/gpt.js"></script>
+        <!-- <script async src="https://acdn.adnxs.com/prebid/not-for-prod/prebid.js"></script> -->
+        <script async src="prebid.js"></script>
+        <!-- <script type="text/javascript" src="prebidDebugUI.js"></script> -->
+        <script>
+            var div_1_sizes = [
+                [300, 250],
+                [300, 600]
+            ];
+            var div_2_sizes = [
+                [728, 90],
+                [970, 250]
+            ];
+            var PREBID_TIMEOUT = 1000;
+            var FAILSAFE_TIMEOUT = 3000;
+
+            var adUnits = [
+                {
+                    code: '/19968336/header-bid-tag-0',
+                    mediaTypes: {
+                        banner: {
+                            sizes: div_1_sizes
+                        }
+                    },
+                    bids: [{
+                        bidder: 'appnexus',
+                        params: {
+                            placementId: 13144370
+                        }
+                    }]
+                },
+                {
+                    code: '/19968336/header-bid-tag-1',
+                    mediaTypes: {
+                        banner: {
+                            sizes: div_2_sizes
+                        }
+                    },
+                    bids: [{
+                        bidder: 'appnexus',
+                        params: {
+                            placementId: 13144370
+                        }
+                    }]
+                }
+            ];
+
+            // ======== DO NOT EDIT BELOW THIS LINE =========== //
+            var googletag = googletag || {};
+            googletag.cmd = googletag.cmd || [];
+            googletag.cmd.push(function() {
+                googletag.pubads().disableInitialLoad();
+            });
+
+            var pbjs = pbjs || {};
+            pbjs.que = pbjs.que || [];
+
+            pbjs.que.push(function() {                                
+
+                pbjs.setConfig({
+                  debugging: {
+                    enabled: true
+                  }
+                });
+
+                pbjs.setConfig({
+                    "currency": {
+                       "adServerCurrency": "JPY",
+                       "granularityMultiplier": 108,
+                       "rates": { "USD": { "JPY": 110.21 }}
+                    }
+                });
+
+                pbjs.setConfig({
+                    cache: {
+                        url: 'https://my-pbs.example.com/cache',
+                    ignoreBidderCacheKey: true
+                    }
+                });
+
+                pbjs.setConfig({
+                  "schain": {
+                    "validation": "strict",
+                    "config": {
+                      "ver":"1.0",
+                      "complete": 1,
+                      "nodes": [
+                        {
+                          "asi":"indirectseller.com",
+                          "sid":"00001",
+                          "hp":1
+                        }
+                      ]
+                    }
+                  }
+                });
+
+                pbjs.setConfig({
+                    debug: true,
+                    // consentManagement: {
+                    //     cmpApi: 'iab',
+                    //     timeout: 1000,
+                    //     defaultGdprScope: true
+                    // },
+                    // consentManagement: {
+                    //     cmpApi: 'static',
+                    //     consentData: {
+                    //         consentString: 'BOEFEAyOEFEAyAHABDENAI4AAAB9vABAASA'
+                    //         vendorData: {
+                    //             purposeConsents: {
+                    //                 '1': true
+                    //             }
+                    //         }
+                    //     }
+                    // },
+                    userSync: {
+                        userIds: [
+                        // {
+                        //     name: "pubProvidedId",
+                        //     params: {
+                        //         eids: [{
+                        //             source: "domain.com",
+                        //             uids:[{
+                        //                 id: "value read from cookie or local storage",
+                        //                 atype: 1,
+                        //                 ext: {
+                        //                     stype: "ppuid" // allowable options are sha256email, DMP, ppuid for now
+                        //                 }
+                        //             }]
+                        //         },{
+                        //             source: "3rdpartyprovided.com",
+                        //             uids:[{
+                        //                 id: "value read from cookie or local storage",
+                        //                 atype: 3,
+                        //                 ext: {
+                        //                     stype: "sha256email"
+                        //                 }
+                        //             }]
+                        //         }],
+                        //         // eidsFunction: getHashedEmail // any user defined function that exists in the page
+                        //     }
+                        // },
+                        {
+                            name: "unifiedId",
+                            params: {
+                                partner: "prebid",
+                                url: "http://match.adsrvr.org/track/rid?ttd_pid=prebid&fmt=json"
+                            },
+                            storage: {
+                                type: "html5",
+                                name: "unifiedid",
+                                expires: 30
+                            },
+                        },{
+                            name: "intentIqId",
+                            params: {
+                                partner: 0, //Set your real IntentIQ partner ID here for production.
+                            },
+                            storage: {
+                                type: "cookie",
+                                name: "intentIqId",
+                                expires: 30
+                            },
+                        },
+                        {
+                            name: "id5Id",
+                            params: {
+                                partner: 173 //Set your real ID5 partner ID here for production, please ask for one at http://id5.io/prebid
+                            },
+                            storage: {
+                                type: "cookie",
+                                name: "id5id",
+                                expires: 90,
+                                refreshInSeconds: 8*3600 // Refresh frequency of cookies, defaulting to 'expires'
+                            },
+
+                        }, {
+                            name: "merkleId",
+                            params: {
+                                ptk: '12345678-aaaa-bbbb-cccc-123456789abc', //Set your real merkle partner key here
+                                pubid: 'EXAMPLE' //Set your real merkle publisher id here
+                            },
+                            storage: {
+                                type: "html5",
+                                name: "merkleId",
+                                expires: 30
+                            },
+
+                        },{
+                            name: "parrableId",
+                            params: {
+                                // change to Parrable Partner Client ID(s) you received from the Parrable Partners you are using
+                                partner: '30182847-e426-4ff9-b2b5-9ca1324ea09b'
+                            }
+                        }, {
+                            name: "pubCommonId",
+                            storage: {
+                                type: "cookie",
+                                name: "pubcid",
+                                expires: 365
+                            },
+                            // value: {
+                            //     foo: '9879878907987',
+                            //     bar:'93939'
+                            // }
+                        },  {
+                        name: 'identityLink',
+                        params: {
+                            pid: '14' // Set your real identityLink placement ID here
+                        },
+                        storage: {
+                            type: 'cookie',
+                            name: 'idl_env',
+                            expires: 30
+                        }
+                        },
+                        {
+                        name: "sharedId",
+                        // bidders: ["rubicon", "sampleBidders"], // to allow this ID for specific bidders
+                        params: {
+                            syncTime: 60 // in seconds, default is 24 hours
+                        },
+                        storage: {
+                            type: "cookie",
+                            name: "sharedid",
+                            expires: 28
+                        }
+                        },
+                        {
+                        name: 'lotamePanoramaId'
+                        },
+                        {
+                        name: "liveIntentId",
+                        params: {
+                            publisherId: "9896876"
+                        },
+                        storage: {
+                            type: "cookie",
+                            name: "_li_pbid",
+                            expires: 28
+                        }
+                        },
+                        {
+                            name: "zeotapIdPlus"
+                        },
+                        {
+                            name: 'haloId',
+                            storage: {
+                                type: "cookie",
+                                name: "haloId",
+                                expires: 28
+                            }
+                        },
+                        {
+                            name: "quantcastId"
+                        },
+                        {
+                            name: "criteo"
+                        },
+                        ],
+                        syncDelay: 5000,
+                        auctionDelay: 1000
+                    }
+                });
+
+                // Common FPD
+                pbjs.setConfig({
+                   ortb2: {
+                       site: {
+                           name: "example",
+                           domain: "page.example.com",
+                           cat: ["IAB2"],
+                           sectioncat: ["IAB2-2"],
+                           pagecat: ["IAB2-2"],
+                           page: "https://page.example.com/here.html",
+                           ref: "https://ref.example.com",
+                           keywords: "power tools, drills",
+                           search: "drill",
+                           content: {
+                        userrating: "4",
+                        data: [{
+                                "name": "www.dataprovider1.com",
+                                "ext": { "taxonomyname": "iab_content_taxonomy" },
+                            "segment": [
+                                    { "id": "687" }, 
+                                    { "id": "123" }
+                            ]
+                                }]
+                       },
+                       ext: {
+                               data: {   // fields that aren't part of openrtb 2.5
+                                   pageType: "article",
+                                   category: "repair"
+                               }
+                       }
+                        },
+                        user: {
+                           yob: 1985,
+                           gender: "m",
+                           keywords: "a,b",
+                       data: [{
+                           name: "dataprovider.com",
+                           ext: { taxonomyname: "iab_audience_taxonomy" },
+                               segment: [
+                          { id: "1" }
+                               ]
+                       }],
+                       ext: {
+                               data: {
+                                  registered: true,
+                                  interests: ["cars"]
+                           }
+                           }
+                        }
+                    }
+                });
+
+                pbjs.onEvent('noBid', function(){
+                    console.log('in noBid with args', arguments);
+                });
+
+                pbjs.onEvent('auctionInit', function(){
+                    console.log('in auctionInit with args', arguments);
+                });
+
+                pbjs.onEvent('auctionEnd', function(){
+                    console.log('in auctionEnd with args', arguments);
+                });
+
+                pbjs.onEvent('auctionDebug', function(){
+                    console.log('in auctionDebug with args', arguments);
+                });
+
+                pbjs.onEvent('setTargeting', function(){
+                    console.log('in setTargeting with args', arguments);
+                });
+
+                pbjs.onEvent('tcf2Enforcement', function(){
+                    console.log('in tcf2Enforcement with args', arguments);
+                })
+
+                pbjs.addAdUnits(adUnits);
+                pbjs.requestBids({
+                    bidsBackHandler: initAdserver,
+                    timeout: PREBID_TIMEOUT
+                });
+            });
+
+            function initAdserver() {
+                if (pbjs.initAdserverSet) return;
+                pbjs.initAdserverSet = true;
+                googletag.cmd.push(function() {
+                    pbjs.que.push(function() {
+                        pbjs.setTargetingForGPTAsync();
+                        googletag.pubads().refresh();
+                    });
+                });
+            }
+            // in case PBJS doesn't load
+            setTimeout(function() {
+                initAdserver();
+            }, FAILSAFE_TIMEOUT);
+
+            googletag.cmd.push(function() {
+                googletag.defineSlot('/19968336/header-bid-tag-0', div_1_sizes, 'div-1').addService(googletag.pubads());
+                googletag.pubads().enableSingleRequest();
+                googletag.enableServices();
+            });
+            googletag.cmd.push(function() {
+                googletag.defineSlot('/19968336/header-bid-tag-1', div_2_sizes, 'div-2').addService(googletag.pubads());
+                googletag.pubads().enableSingleRequest();
+                googletag.enableServices();
+            });
+        </script>        
+
+    </head>
+
+    <body>
+        <!-- <div id="root"></div> -->
+        <h2>Basic Prebid.js Example</h2>
+        <h5>Div-1</h5>
+        <div id='div-1'>
+            <script type='text/javascript'>
+                googletag.cmd.push(function() {
+                    googletag.display('div-1');
+                });
+
+            </script>
+        </div>
+
+        <br>
+
+        <h5>Div-2</h5>
+        <div id='div-2'>
+            <script type='text/javascript'>
+                googletag.cmd.push(function() {
+                    googletag.display('div-2');
+                });
+
+            </script>
+        </div>
+
+    </body>
+
+</html>
+
