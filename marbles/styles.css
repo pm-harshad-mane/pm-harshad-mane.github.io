@@ -1,0 +1,29 @@
+#root {
+	text-align: center;
+}
+.block{
+    margin: 10px;
+    padding: 15px;
+    width: 100px;
+  	height: 100px;
+  	border-radius: 50%;
+  	display: inline;
+}
+
+.block-empty {
+	background-color: aliceblue;
+}
+
+.block-not-in-use{
+	background-color: white;
+}
+
+.block-with-marble {	
+	background-image  :url(http://www.zingerbugimages.com/backgrounds/brown_marble.jpg);
+	border: 2px solid #999;
+}
+
+.block-with-marble-selected{
+	border-color: darkgreen;
+    border-width: medium;
+}
