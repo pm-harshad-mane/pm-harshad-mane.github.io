@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <title>Ri-Mi (Read for Me)</title>
+    <style type="text/css">
+    	.screen{
+    		background-color: #999;    		
+    	}
+    </style>
+  </head>
+  <body>    
+    <div id="carouselExampleSlidesOnly" class="carousel carousel-dark slide" data-bs-ride="carousel">
+	  <div class="carousel-inner">
+	  	<!-- Home screen -->
+	    <div class="carousel-item active vh-100 vw-100 highlight">
+				<div class="text-center">
+					<br/><br/>
+					<h3>Ri-Mi (Read for Me)</h3>
+					<br/>
+					<p>Take a photo of a written text, and Ri-Mi will read it aloud for you.</p>
+					<i class="bi-camera-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+					<i class="bi-arrow-right" style="font-size: 2rem; color: gray;"></i>
+					<i class="bi-arrow-right" style="font-size: 2rem; color: gray;"></i>
+					<i class="bi-file-text-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+					<i class="bi-arrow-right" style="font-size: 2rem; color: gray;"></i>
+					<i class="bi-arrow-right" style="font-size: 2rem; color: gray;"></i>
+					<i class="bi-volume-up-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+					<br/><br/>
+					<button id="action-activate-camera" type="button" class="btn btn-outline-primary">
+						Get Started
+					</button>
+					<br/><br/>
+					Developed by Harshad Mane
+				</div>
+	    </div>
+
+	    <!-- Live Camera -->
+	    <div class="carousel-item container-fluid vh-100 vw-100 ">
+	    	<div class="text-center">
+	    		<video ref="video" class="vh-100 vw-100" autoplay muted playsinline></video>
+		      <div class="fixed-bottom">
+					  	<i id="action-take-picture" class="bi-circle-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+					</div>
+				</div>	
+	    </div>
+
+	    <!-- Captured Photo -->
+	    <div class="carousel-item container-fluid vh-100 vw-100 ">
+	    	<div class="text-center">
+	    		<img id="photo" src="" alt="Photo" class="">
+		    	<div class="fixed-bottom">
+		      	<i id="action-convert-to-text" class="bi-file-text-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+		      </div>
+		    </div>  
+	    </div>
+
+	    <!-- Generated Text -->
+	    <div class="carousel-item container-fluid vh-100 vw-100 ">
+	    	<div class="text-center">
+	    		<div id="log"></div>
+		    	<div class="fixed-bottom">
+		      	<i id="action-start-reading" class="bi-play-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+		      </div>
+		      <!-- <i class="bi-pause-fill" style="font-size: 2rem; color: cornflowerblue;"></i> -->
+		    </div>  
+	    </div>
+	  </div>
+	</div>
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/5.14.0/load-image.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/5.14.0/load-image-scale.min.js"></script>
+    <script type="text/javascript" src="./tesseract.dev.js"></script>
+    <script type="text/javascript" src="new.js"></script>
+
+  </body>
+</html>
