@@ -61,9 +61,9 @@
     	if(packet.status == 'done'){
     		var text = packet.data.data.text;
 			text = text.replaceAll('\n', ' ');
-			var pre = document.createElement('pre');
-			pre.appendChild(document.createTextNode(text));					
-			document.querySelector("#log").appendChild(pre);
+			// var pre = document.createElement('pre');
+			// pre.appendChild(document.createTextNode(text));
+			document.querySelector("#log").appendChild(document.createTextNode(text));
 			carousel.to(3);
 		}
     }
@@ -86,7 +86,7 @@
 
 	actionStartReading.onclick = function(){
 		var msg = new SpeechSynthesisUtterance();
-		msg.text = document.querySelector("#log pre").innerHTML;
+		msg.text = document.querySelector("#log").innerHTML;
 		window.speechSynthesis.speak(msg);
 	}
 
