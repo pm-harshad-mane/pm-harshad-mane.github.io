@@ -13,6 +13,7 @@
 	
 	// Main caraousel UI	
 	carousel.interval = false;
+	carousel.touch = false;
 	carousel.pause();
 
 	// activate camera
