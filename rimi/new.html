@@ -17,7 +17,7 @@
     </style>
   </head>
   <body>    
-    <div id="carouselExampleSlidesOnly" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <div id="carouselExampleSlidesOnly" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
 	  <div class="carousel-inner">
 	  	<!-- Home screen -->
 	    <div class="carousel-item active vh-100 vw-100 highlight">
@@ -34,7 +34,7 @@
 					<i class="bi-arrow-right" style="font-size: 2rem; color: gray;"></i>
 					<i class="bi-volume-up-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
 					<br/><br/>
-					<button id="action-activate-camera" type="button" class="btn btn-outline-primary">
+					<button id="action-activate-camera" type="button" class="btn btn-outline-primary shadow">
 						Get Started
 					</button>
 					<br/><br/>
@@ -47,9 +47,9 @@
 	    	<div class="text-center">
 	    		<video ref="video" class="vh-100 vw-100" autoplay muted playsinline></video>
 		      <div class="fixed-bottom">
-					  	<i id="action-take-picture" class="bi-circle-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+					  	<i id="action-take-picture" class="bi-circle-fill shadow" style="font-size: 2rem; color: cornflowerblue;"></i>
 					</div>
-				</div>	
+				</div>
 	    </div>
 
 	    <!-- Captured Photo -->
@@ -57,7 +57,10 @@
 	    	<div class="text-center">
 	    		<img id="photo" src="" alt="Photo" class="">
 		    	<div class="fixed-bottom">
-		      	<i id="action-convert-to-text" class="bi-file-text-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+		      	<i id="action-convert-to-text" class="bi-file-text-fill shadow" style="font-size: 2rem; color: cornflowerblue;"></i>
+		      	<div id="spinner" class="spinner-border text-primary visually-hidden" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
 		      </div>
 		    </div>  
 	    </div>
@@ -67,7 +70,7 @@
 	    	<div class="text-center">
 	    		<p id="log" class="vw-100" style="max-width: 100%;"></p>
 		    	<div class="fixed-bottom">
-		      	<i id="action-start-reading" class="bi-play-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+		      	<i id="action-start-reading" class="bi-play-fill shadow" style="font-size: 2rem; color: cornflowerblue;"></i>
 		      </div>
 		      <!-- <i class="bi-pause-fill" style="font-size: 2rem; color: cornflowerblue;"></i> -->
 		    </div>  
