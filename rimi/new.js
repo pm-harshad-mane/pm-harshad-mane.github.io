@@ -70,6 +70,8 @@
 
     actionConvertToText.onclick = async function(){
     	console.log('recognizing the file');
+    	document.querySelector("#spinner").classList.remove("visually-hidden");
+    	actionConvertToText.classList.add("visually-hidden");
 		document.querySelector("#log").innerHTML = '';
 		const corePath = 'tesseract-core.wasm.js';
 		const lang = 'eng';
