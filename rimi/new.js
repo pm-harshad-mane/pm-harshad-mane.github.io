@@ -3,6 +3,7 @@
 	let stream = null;
 	let ready = false;
 	let photo = null;
+	let theGeneratedText = '';
 	var myCarousel = document.querySelector('#carouselExampleSlidesOnly');
 	var carousel = new bootstrap.Carousel(myCarousel);
 	let video = document.querySelector("video");
@@ -65,11 +66,11 @@
 	function progressUpdate(packet){
     	console.log(packet);
     	if(packet.status == 'done'){
-    		var text = packet.data.data.text;
-			text = text.replaceAll('\n', ' ');
+    		theGeneratedText = packet.data.data.text;
+			theGeneratedText = theGeneratedText.replaceAll('\n', ' ');
 			// var pre = document.createElement('pre');
 			// pre.appendChild(document.createTextNode(text));
-			document.querySelector("#log").appendChild(document.createTextNode(text));
+			document.querySelector("#log").appendChild(document.createTextNode(theGeneratedText));
 			carousel.to(3);
 		}
     }
@@ -94,7 +95,8 @@
 
 	actionStartReading.onclick = function(){
 		var utterance = new SpeechSynthesisUtterance();
-		utterance.text = document.querySelector("#log").innerHTML;
+		// utterance.text = document.querySelector("#log").innerHTML;
+		utterance.text = theGeneratedText;
 		utterance.onboundary = onboundaryHandler;
 		window.speechSynthesis.speak(utterance);
 	}
@@ -102,25 +104,48 @@
 
 	// code to highlihght the text
 	function onboundaryHandler(event){
-	    var textarea = document.getElementById('log');
-	    var value = textarea.value;
+	    // var textarea = document.getElementById('log');
+	    var thePara = document.getElementById('log');
+	    var value = theGeneratedText;
 	    var index = event.charIndex;
 	    var word = getWordAt(value, index);
-	    var anchorPosition = getWordStart(value, index);
-	    var activePosition = anchorPosition + word.length;
+
+	    thePara.innerHTML = theGeneratedText.substring(0, index) 
+	    	+ "<strong>" 
+	    	+ theGeneratedText.substring(index, index+word.length)
+	    	+ "</strong>" 
+	    	+ theGeneratedText.substring(index+word.length);
+
+
+	    /*
+			var index = innerHTML.indexOf(text);
+			if (index >= 0) { 
+				innerHTML = innerHTML.substring(0,index) 
+				+ "<span class='highlight'>" 
+				+ innerHTML.substring(index,index+text.length) + 
+				"</span>" 
+				+ innerHTML.substring(index + text.length);
+				inputText.innerHTML = innerHTML;
+			}
+	    */
+
+
+	    // old textarea related code
+	    // var anchorPosition = getWordStart(value, index);
+	    // var activePosition = anchorPosition + word.length;
 	    
-	    textarea.focus();
+	    // textarea.focus();
 	    
-	    if (textarea.setSelectionRange) {
-	       textarea.setSelectionRange(anchorPosition, activePosition);
-	    }
-	    else {
-	       var range = textarea.createTextRange();
-	       range.collapse(true);
-	       range.moveEnd('character', activePosition);
-	       range.moveStart('character', anchorPosition);
-	       range.select();
-	    }
+	    // if (textarea.setSelectionRange) {
+	    //    textarea.setSelectionRange(anchorPosition, activePosition);
+	    // }
+	    // else {
+	    //    var range = textarea.createTextRange();
+	    //    range.collapse(true);
+	    //    range.moveEnd('character', activePosition);
+	    //    range.moveStart('character', anchorPosition);
+	    //    range.select();
+	    // }
 	};
 
 	// Get the word of a string given the string and index
