@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <title>Number Game</title>
+  </head>
+  <body>
+  	<div class="vh-100 vw-100">
+  		<nav class="navbar navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a class="navbar-brand mb-0 h1" href="index.html">Number Games</a>
+				<span class="d-flex">
+					<a class="navbar-brand text-white-50" href="#">Listen and write</a>
+				</span>
+			</div>
+  		</nav>
+
+  		<br/><br/>
+
+  		<!-- Carousel -->
+  		<div id="carouselExampleSlidesOnly" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
+	  		<div class="carousel-inner vh-100 vw-100">
+
+	  			<!-- Home screen -->
+	    		<div class="carousel-item active highlight">
+					<div class="text-center">
+						The game is simple, the app will speak a number from the given range and you will need to write it down. All the best!
+						<br/><br/><br/>
+						<button id="got-it" type="button" class="btn btn-outline-dark">Got it!</button>
+					</div>
+				</div>
+
+				<!-- Min-Max -->
+			    <div class="carousel-item highlight">
+			    	<div class="text-center">
+			    		<span><strong>Select the minimum number range:</strong></span>
+						<select id="min-number" class="form-select" aria-label="Default select example">
+							<option value="0" >Above zero</option>
+							<option value="10" >Above ten</option>
+							<option value="100" selected>Above one hundred</option>
+							<option value="1000">Above one thousand</option>
+							<option value="10000">Above ten thousand</option>
+							<option value="100000">Above hundred thousand</option>
+							<option value="1000000">Above one million</option>
+							<option value="10000000">Above ten million</option>
+							<option value="100000000">Above hundred million</option>
+							<option value="1000000000">Above one billion</option>
+							<option value="10000000000">Above ten billion</option>
+							<option value="100000000000">Above hundred billion</option>
+						</select>
+						<br/><br/>
+			    		<span><strong>Select the maximum number range:</strong></span>
+						<select id="max-number" class="form-select" aria-label="Default select example">
+							<option value="10" >Under ten</option>
+							<option value="100">Under one hundred</option>
+							<option value="1000" selected>Under one thousand</option>
+							<option value="10000">Under ten thousand</option>
+							<option value="100000">Under hundred thousand</option>
+							<option value="1000000">Under one million</option>
+							<option value="10000000">Under ten million</option>
+							<option value="100000000">Under hundred million</option>
+							<option value="1000000000">Under one billion</option>
+							<option value="10000000000">Under ten billion</option>
+							<option value="100000000000">Under hundred billion</option>
+						</select>												
+						<br/>
+						<button id="lets-play" type="button" class="btn btn-outline-dark">Let's play!</button>
+						<br/><br/>
+						<p>
+							Please note: if you change the minimum and maximum number ranges while playing the game then the score will be reset.
+						</p>
+			    	</div>
+			    </div>
+
+			    <!-- The Game -->
+			    <div class="carousel-item highlight">
+			    	<div class="text-center">
+			    		<div id="listen-and-write">
+							<button id="listen-and-write-listen" type="button" class="btn btn-outline-dark">
+								Listen a new number
+							</button>
+							<button id="listen-and-write-listen-again" type="button" class="btn btn-outline-dark" disabled="">	Listen again
+							</button>
+							<br/><br/>
+							Write your answer here (without commas):
+							<br/><br/>
+							<input type="number" id="listen-and-write-answer"/>
+							<br/><br/>
+							<button id="listen-and-write-check" type="button" class="btn btn-outline-dark" disabled="">Check</button>
+							<br/><br/>
+							<span>Score: <strong id="listen-and-write-score"></strong></span>
+							<br><br/>
+							<div id="listen-and-write-correct-answer" class="alert alert-danger invisible" role="alert">
+							</div>
+						</div>
+			    	</div>
+			    </div>
+	  		</div>
+	  	</div>	    				
+	</div>
+
+    <!-- Optional JavaScript; check if we need it! -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="listenAndWrite.js"></script>
+  </body>
+</html>
