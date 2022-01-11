@@ -1,0 +1,217 @@
+
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+    <style>
+        body {
+            margin: 0 auto;
+            width: 728px;
+        }        
+    </style>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Header bidding with OpenWrap & Confiant</title>
+    <!-- <script async="" src="https://confiant-integrations.global.ssl.fastly.net/oUsMi2kpyL-PFddeRIkSo0U4u4E/gpt_and_prebid/config.js"></script> -->
+    <script>
+      var myPropertyId = 'oUsMi2kpyL-PFddeRIkSo0U4u4E';
+        window.confiant = window.confiant || {};
+        window.confiant[myPropertyId] = window.confiant[myPropertyId] || {clientSettings: {}};
+        var clientSettings = window.confiant[myPropertyId].clientSettings || (window.confiant[myPropertyId].clientSettings = {});
+        clientSettings.prebidNameSpace = 'owpbjs';
+    </script>
+    <script async="" src="https://confiant-integrations.global.ssl.fastly.net/oUsMi2kpyL-PFddeRIkSo0U4u4E/gpt_and_prebid/config.js"></script>
+    <script type="text/javascript">
+        var PWT = {};
+        var pwtFinished = false;
+        var initAdserverSet = false;
+        var pwtBids = [];
+        const REFRESH_INTERVAL = 30;
+        PWT.jsLoaded = function() {
+            //This code will run as soon as PWT.js reports that it has finished loading
+ 
+            // OpenWrap definitions of the ad units we want to bid on.  We cannot
+            //   use PWT.generateConfForGPT when doing concurrent executing since
+            //  if OpenWrap (pwt.js) loads before GPT, we will call PWT.requestBids
+            //  before GPT has loaded
+            var pwt_ad_units = [{
+                    "code": "ad_leaderboard",
+                    "divId": "ad_leaderboard",
+                    "adUnitId": "/15671365/Todd_Test_Leaderboard",
+                    "adUnitIndex": "0",
+                    "mediaTypes": {
+                        "banner": {
+                            "sizes": [[728,90],[970,90],[970,250]]
+                        }
+                    }
+                },
+                {
+                    "code": "ad_inarticle",
+                    "divId": "ad_inarticle",
+                    "adUnitId": "/15671365/Todd_Test",
+                    "adUnitIndex": "0",
+                    "mediaTypes": {
+                        "banner": {
+                            "sizes": [[300,250],[300,600]]
+                        }
+                    }
+                },
+                {
+                    "code": "ad_footer",
+                    "divId": "ad_footer",
+                    "adUnitId": "/15671365/Todd_Test_Leaderboard",
+                    "adUnitIndex": "1",
+                    "mediaTypes": {
+                        "banner": {
+                            "sizes": [[728,90]]
+                        }
+                    }
+                }
+            ];
+
+            //Submitting a round of bidding.  The first argument we pass is the array of ad slots for bidding, the second is the callback function that will run when the round of bidding is complete
+            if (typeof PWT.requestBids === 'function') {
+                var start_time = new Date().getTime();
+                PWT.requestBids(
+                    pwt_ad_units,
+                    function(adUnitsArray) {
+                        var end_time = new Date().getTime();
+                        var diff = end_time - start_time;
+                        console.log("OpenWrap bidding just finished. Time taken: " + diff.toString());
+                        
+                        
+                        
+                        adUnitsArray.forEach(bid => {
+                          //if you are refreshing ads, delete any existing ads here before rendering a new one
+                          // 
+                          // while (myNode.firstChild) {
+                          //   myNode.removeChild(myNode.lastChild);
+                          // }
+                          
+                          //create a new iframe on the page to receive the ad creative
+                          thisId = "openwrap-ad-"+bid.bidData.kvp.pwtsid;
+                          WIDTH = bid.bidData.kvp.pwtsz.split("x")[0];
+                          HEIGHT = bid.bidData.kvp.pwtsz.split("x")[1];
+                          BIDDER_NAME = bid.bidData.kvp.pwtpid;
+                          // console.log(bid)
+                          let fIframe = document.createElement('iframe');
+                          fIframe.setAttribute('id', thisId);
+                          fIframe.setAttribute('frameborder', "0");
+                          fIframe.setAttribute('scrolling', "no");
+                          fIframe.setAttribute('allowtransparency', "true");
+                          fIframe.setAttribute('marginheight', "0");
+                          fIframe.setAttribute('marginwidth', "0");
+                          fIframe.setAttribute('width', WIDTH);
+                          fIframe.setAttribute('height', HEIGHT);
+                          fIframe.setAttribute('hspace', "0");
+                          fIframe.setAttribute('vspace', "0");
+                          document.getElementById(bid.divId).appendChild(fIframe);
+                          
+                          PWT.displayCreative(document.getElementById(thisId).contentDocument,bid.bidData.kvp.pwtsid);
+                        });
+                    }
+                );
+            }
+        };
+ 
+        (function() {
+            // We insert both the gpt and pwt scripts are the same.  When OpenWrap (pwt.js) loads
+            //  we immediately request bids.   Both when bids are back from OpenWrap & GPT loaded,
+            //  initAdServer()
+            var purl = window.location.href;
+            //the 158879 in the URL below is the publisher ID of my test account -- this will need to change in your code
+            //the 1848 is my OpenWrap profile ID -- this will need to change in your code
+            var url = '//ads.pubmatic.com/AdServer/js/pwt/158879/1848';
+            var profileVersionId = '';
+            if (purl.indexOf('pwtv=') > 0) {
+                var regexp = /pwtv=(.*?)(&|$)/g;
+                var matches = regexp.exec(purl);
+                if (matches.length >= 2 && matches[1].length > 0) {
+                    profileVersionId = '/' + matches[1];
+                }
+            }
+            var wtads = document.createElement('script');
+            wtads.async = true;
+            wtads.type = 'text/javascript';
+            wtads.src = url + profileVersionId + '/pwt.js';
+            var node = document.getElementsByTagName('script')[0];
+            node.parentNode.insertBefore(wtads, node);
+         }());
+    </script>
+ 
+</head>
+ 
+<body>
+    <h2>Header bidding with OpenWrap & Confiant</h2>
+    This code example loads Google (GPT.js) and OpenWrap (PWT.js) concurrently for the fastest possible load time.<br><br>
+    Since we cannot depend on GPT to get our list of ad units, we build the array of ad units manually and initiate our first round of bidding before we even need to check if GPT.js has finished loading.<br><br>
+    We wait until the last possible moment to verify that GPT.js has finished loading, which is when we need to call setTargeting() to apply our winning bid's key-value pairs to each ad unit. Then we call display() to send the key-values to GAM so they can decide who wins the ad slot.
+    <br><br>Happy bidding!<br><br>
+    <div style="height: 90px;" id='ad_leaderboard'></div><br>
+    <br>
+    Here are a few other things that you might find helpful:
+    <ul>
+        <li>Use the URL parameter <span style="font-family: monospace">?pubmaticTest=true</span> to always get a sample bid response & ad creative from PubMatic<br><br></li>
+        <li>You can inspect the network requests to <span style="font-family: monospace">https://hbopenbid.pubmatic.com/translator</span> to see the requests and responses from PubMatic (I usually just filter for "translator" in the network inspector)<br><br></li>
+        <li>You can force OpenWrap to send a higher winning bid price to GAM with this code snippet. Just run this in the console and then refresh the page:<br><span style="font-family: monospace"><pre>
+owpbjs.setConfig({
+  debugging: {
+    enabled: true,
+    bids: &#91;{
+      bidder: &#39;pubmatic&#39;,
+      cpm: 19.99,
+    }&#93;
+  }
+});
+        </pre>
+        </span></li>
+        <li>You can view all bid responses from all bidders with this code snippet:<br><span style="font-family: monospace"><pre>
+(function() {
+    var output = &#91;&#93;;
+    for (var adunit in PWT.bidMap) {
+        for (var adapter in PWT.bidMap&#91;adunit&#93;.adapters) {
+            for (var bid in PWT.bidMap&#91;adunit&#93;.adapters&#91;adapter&#93;.bids) {
+                var b = PWT.bidMap&#91;adunit&#93;.adapters&#91;adapter&#93;.bids&#91;bid&#93;;
+                output.push({
+                    &#39;adunit&#39;: adunit,
+                    &#39;bidder&#39;: adapter,
+                    &#39;kgpv&#39;: b.kgpv,
+                    &#39;grossCpm&#39;: b.grossEcpm,
+                    &#39;winningBid&#39;: b.isWinningBid,
+                    &#39;Response Time&#39;: b.receivedTime - PWT.bidMap&#91;adunit&#93;.adapters&#91;adapter&#93;.callInitiatedTime,
+                    &#39;Post Timeout&#39;: b.isPostTimeout,
+                });
+            }
+        }
+    }
+    if (output.length) {
+        if (console.table) {
+            console.table(output);
+        } else {
+            for (var j = 0; j &lt; output.length; j++) {
+                console.log(output&#91;j&#93;);
+            }
+        }
+    } else {
+        console.warn(&#39;No OpenWrap responses&#39;);
+    }
+})();
+            </pre>
+        </span></li>
+    </ul>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mattis pulvinar ante sit amet tincidunt. Cras sed est tincidunt, tristique urna id, blandit tellus. Curabitur euismod bibendum dolor, ac vehicula felis suscipit convallis. Integer feugiat mollis ultrices. Curabitur sit amet quam non mi molestie faucibus eget ac augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi vitae ultrices ex, vel pulvinar nunc. In pretium ante lorem, in placerat nunc elementum sed. Cras facilisis ultricies ante. Maecenas sit amet purus et ex aliquam tristique sit amet quis massa. Cras semper imperdiet rutrum. Quisque id convallis neque. Aliquam eu dolor lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Proin purus purus, elementum vel pulvinar id, fringilla ut nunc. Etiam sed quam tempor, interdum magna consequat, scelerisque enim.
+    <br><br>
+    Etiam eu massa quis lectus commodo feugiat. Sed sagittis vel enim in pretium. Suspendisse imperdiet neque enim, in euismod orci mollis et. Maecenas molestie, felis vel dapibus tincidunt, purus massa suscipit erat, eu lobortis diam justo eget ipsum. Suspendisse orci purus, scelerisque vestibulum tortor vitae, vulputate accumsan sapien. Vivamus dolor lorem, bibendum egestas pretium sit amet, rutrum id ipsum. Morbi sagittis tincidunt neque, ac sollicitudin nibh venenatis eget. Vestibulum sed neque nec metus tincidunt ultrices quis in enim. Sed fringilla risus ac ex sollicitudin porta. Pellentesque suscipit cursus nulla, id porttitor nulla laoreet vel. Maecenas quis ipsum venenatis, scelerisque tellus a, auctor tortor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc leo ipsum, ultrices quis risus ut, suscipit venenatis libero.
+    <br><br>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque mattis pulvinar ante sit amet tincidunt. Cras sed est tincidunt, tristique urna id, blandit tellus. Curabitur euismod bibendum dolor, ac vehicula felis suscipit convallis. Integer feugiat mollis ultrices. Curabitur sit amet quam non mi molestie faucibus eget ac augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi vitae ultrices ex, vel pulvinar nunc. In pretium ante lorem, in placerat nunc elementum sed. Cras facilisis ultricies ante. Maecenas sit amet purus et ex aliquam tristique sit amet quis massa. Cras semper imperdiet rutrum. Quisque id convallis neque. Aliquam eu dolor lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Proin purus purus, elementum vel pulvinar id, fringilla ut nunc. Etiam sed quam tempor, interdum magna consequat, scelerisque enim.
+    <br><br>
+    Etiam eu massa quis lectus commodo feugiat. Sed sagittis vel enim in pretium. Suspendisse imperdiet neque enim, in euismod orci mollis et. Maecenas molestie, felis vel dapibus tincidunt, purus massa suscipit erat, eu lobortis diam justo eget ipsum. Suspendisse orci purus, scelerisque vestibulum tortor vitae, vulputate accumsan sapien. Vivamus dolor lorem, bibendum egestas pretium sit amet, rutrum id ipsum. Morbi sagittis tincidunt neque, ac sollicitudin nibh venenatis eget. Vestibulum sed neque nec metus tincidunt ultrices quis in enim. Sed fringilla risus ac ex sollicitudin porta. Pellentesque suscipit cursus nulla, id porttitor nulla laoreet vel. Maecenas quis ipsum venenatis, scelerisque tellus a, auctor tortor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc leo ipsum, ultrices quis risus ut, suscipit venenatis libero.
+    
+    <br><br><div style="height: 250px;width:300px;" id='ad_inarticle'></div><br>
+    In nunc lectus, gravida vel eleifend eu, porta vitae lectus. Quisque diam diam, sagittis a tortor ut, tincidunt pellentesque ipsum. Sed non consequat metus. Vestibulum non nisl vulputate, laoreet elit ac, ultrices enim. Curabitur ante leo, efficitur vel velit quis, dapibus cursus nisl. Integer venenatis vulputate massa at pellentesque. Nunc faucibus eget massa vitae accumsan. Aenean diam ligula, gravida at laoreet a, accumsan dignissim risus. Vestibulum at pharetra ipsum. Sed sed odio gravida, vulputate odio a, dapibus ex. Proin scelerisque enim urna, non hendrerit mauris varius vitae.
+    <br><br> 
+    In tincidunt feugiat nisl in molestie. Vestibulum id erat volutpat, scelerisque mi quis, venenatis odio. Sed congue nisi in venenatis dapibus. Cras nec porttitor leo. In in porta arcu, quis sodales tellus. Quisque ultricies ornare sagittis. Maecenas viverra odio quis justo iaculis, efficitur malesuada elit sollicitudin. Nam faucibus, odio ac varius varius, lectus est volutpat est, pellentesque iaculis sapien ipsum in ipsum. Ut feugiat quam ac auctor feugiat. Phasellus metus sem, molestie eget ullamcorper vitae, scelerisque vitae risus. Quisque euismod consequat leo id mattis. Nulla mollis sagittis nibh et dictum. Nulla facilisi.
+    <br><br>
+    Donec pellentesque, tellus eget ultricies commodo, sem purus finibus justo, vitae scelerisque lacus sem ac lectus. Morbi et sapien velit. Aenean rhoncus accumsan diam quis mattis. Integer non felis et ligula vestibulum efficitur eu quis lorem. Morbi malesuada, velit ac malesuada vulputate, dolor purus pharetra nulla, ac consequat arcu nulla vitae nisl. Duis sodales enim ut felis cursus consectetur. Nulla molestie odio vel nulla pharetra blandit.
+    <br><br><div style="height: 90px;" id='ad_footer'></div>
+
+</body>
+</html>
