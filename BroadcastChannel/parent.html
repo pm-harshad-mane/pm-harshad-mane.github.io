@@ -2,10 +2,16 @@
 <html>
 <head>
 	<title>Parent Page</title>
+	<script>
+		window.onmessage = (event) => { 
+			console.log('received from iframe', event);
+		}
+	</script>
 </head>
 <body>
 	Hi! I am parent page
 	<hr/>
 	<iframe src="https://html.harshad.workers.dev"></iframe>
+	
 </body>
 </html>
