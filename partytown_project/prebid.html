@@ -5,9 +5,12 @@
         <script>
         	var googletag = googletag || {};
            	googletag.cmd = googletag.cmd || [];
+		window.pushToGoogletagCMD = function pushToGoogletagCMD(){
+			googletag.cmd.push(arguments)
+		}
 		partytown = {
 			lib: '/partytown/',
-			forward: ['googletag'],
+			forward: ['pushToGoogletagCMD'],
 		};
 	</script>
         <script>
@@ -16,7 +19,7 @@
 	</script>
         <script type="text/partytown" async src="//www.googletagservices.com/tag/js/gpt.js"></script>       
         <script type="text/partytown">        	
-            googletag.cmd.push(function() {
+            pushToGoogletagCMD(function() {
                 googletag.pubads().disableInitialLoad();
             });
             var div_1_sizes = [
@@ -27,19 +30,19 @@
                 [728, 90],
                 [970, 250]
             ];
-            googletag.cmd.push(function() {
+            pushToGoogletagCMD(function() {
                 googletag.defineSlot('/19968336/header-bid-tag-0', div_1_sizes, 'div-1').addService(googletag.pubads());
                 googletag.pubads().enableSingleRequest();
                 googletag.enableServices();
             });
-            googletag.cmd.push(function() {
+            pushToGoogletagCMD(function() {
                 googletag.defineSlot('/19968336/header-bid-tag-1', div_2_sizes, 'div-2').addService(googletag.pubads());
                 googletag.pubads().enableSingleRequest();
                 googletag.enableServices();                
             });
 
             setTimeout(function() {
-                googletag.cmd.push(function() {
+                pushToGoogletagCMD(function() {
                     googletag.pubads().refresh();
                 });
             }, 3000);  
@@ -116,7 +119,7 @@
         <h5>Div-1</h5>
         <div id='div-1'>
             <script type='text/partytown'>
-                googletag.cmd.push(function() {
+                pushToGoogletagCMD(function() {
                     googletag.display('div-1');
                 });
 
@@ -128,7 +131,7 @@
         <h5>Div-2</h5>
         <div id='div-2'>
             <script type='text/partytown'>
-                googletag.cmd.push(function() {
+                pushToGoogletagCMD(function() {
                     googletag.display('div-2');
                 });
 
