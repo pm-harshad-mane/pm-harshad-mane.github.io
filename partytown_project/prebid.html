@@ -2,12 +2,22 @@
 
     <head>
         <link rel="icon" type="image/png" href="/favicon.png">
-        <script>
-        	var googletag = googletag || {};
-           	googletag.cmd = googletag.cmd || [];
+	    
+	<script type="text/partytown">
+	 {`
+		window.googletag = window.googletag || [];
+		googletag.cmd = googletag.cmd || [];
 		window.pushToGoogletagCMD = function pushToGoogletagCMD(){
 			googletag.cmd.push(arguments);
 		};
+	 `}
+	</script>    
+        <script>
+        	// var googletag = googletag || {};
+           	// googletag.cmd = googletag.cmd || [];
+		// window.pushToGoogletagCMD = function pushToGoogletagCMD(){
+		//	googletag.cmd.push(arguments);
+		// };
 		partytown = {
 			debug: true,
 			lib: '/partytown/',
