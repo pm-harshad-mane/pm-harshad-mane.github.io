@@ -131,8 +131,8 @@
             tableBody.innerHTML = '';
             
             // Initialize variables
-            let currentInvestment = investment;
-            let currentMonthlyWithdrawal = monthlyWithdrawal;
+            let currentInvestment = Math.floor(investment);
+            let currentMonthlyWithdrawal = Math.floor(monthlyWithdrawal);
             const currentYear = new Date().getFullYear();
             const startYear = currentYear + 1;
             
@@ -141,6 +141,7 @@
                 const annualWithdrawal = currentMonthlyWithdrawal * 12;
                 currentInvestment -= annualWithdrawal;
                 currentInvestment *= (1 + returns);
+                currentInvestment = Math.floor(currentInvestment);
                 
                 // Create a new row and cells
                 const row = document.createElement('tr');
@@ -171,6 +172,7 @@
                 
                 // Increase monthly withdrawal for next year
                 currentMonthlyWithdrawal *= (1 + withdrawalIncrease);
+                currentMonthlyWithdrawal = Math.floor(currentMonthlyWithdrawal);
             }
         }
     </script>
