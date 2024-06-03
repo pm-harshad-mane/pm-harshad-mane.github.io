@@ -37,6 +37,9 @@
             border: 1px solid #ced4da;
             border-radius: 4px;
         }
+        input[type="number"] {
+            text-align: right;
+        }
         button {
             margin-top: 20px;
             padding: 10px;
@@ -72,9 +75,9 @@
         <h2>Systematic Withdrawal Plan Calculator</h2>
         <form id="calculator-form">
             <label for="investment">Investment Amount:</label>
-            <input type="number" id="investment" name="investment" required>
+            <input type="text" id="investment" name="investment" required>
             <label for="monthlyWithdrawal">Monthly Withdrawal Amount:</label>
-            <input type="number" id="monthlyWithdrawal" name="monthlyWithdrawal" required>
+            <input type="text" id="monthlyWithdrawal" name="monthlyWithdrawal" required>
             <label for="withdrawalIncrease">Increase Monthly Withdrawal Amount Every Year By (%):</label>
             <input type="number" id="withdrawalIncrease" name="withdrawalIncrease" required>
             <label for="years">Years to Stay Invested:</label>
@@ -98,10 +101,23 @@
     </div>
 
     <script>
+        function formatNumber(input) {
+            input.value = input.value.replace(/\D/g, '')
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        document.getElementById('investment').addEventListener('input', function () {
+            formatNumber(this);
+        });
+
+        document.getElementById('monthlyWithdrawal').addEventListener('input', function () {
+            formatNumber(this);
+        });
+
         function calculateSWP() {
             // Get input values
-            const investment = parseFloat(document.getElementById('investment').value);
-            const monthlyWithdrawal = parseFloat(document.getElementById('monthlyWithdrawal').value);
+            const investment = parseFloat(document.getElementById('investment').value.replace(/,/g, ''));
+            const monthlyWithdrawal = parseFloat(document.getElementById('monthlyWithdrawal').value.replace(/,/g, ''));
             const withdrawalIncrease = parseFloat(document.getElementById('withdrawalIncrease').value) / 100;
             const years = parseInt(document.getElementById('years').value);
             const returns = parseFloat(document.getElementById('returns').value) / 100;
@@ -113,9 +129,10 @@
             // Initialize variables
             let currentInvestment = investment;
             let currentMonthlyWithdrawal = monthlyWithdrawal;
+            const startYear = 2025;
             
             // Calculate results
-            for (let year = 1; year <= years; year++) {
+            for (let year = 0; year < years; year++) {
                 const annualWithdrawal = currentMonthlyWithdrawal * 12;
                 currentInvestment -= annualWithdrawal;
                 currentInvestment *= (1 + returns);
@@ -127,9 +144,9 @@
                 const investmentCell = document.createElement('td');
                 
                 // Set cell values with proper formatting
-                yearCell.textContent = year;
-                withdrawalCell.textContent = currentMonthlyWithdrawal.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-                investmentCell.textContent = currentInvestment.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                yearCell.textContent = startYear + year;
+                withdrawalCell.textContent = currentMonthlyWithdrawal.toLocaleString('en-US');
+                investmentCell.textContent = currentInvestment.toLocaleString('en-US');
                 
                 // Append cells to row
                 row.appendChild(yearCell);
