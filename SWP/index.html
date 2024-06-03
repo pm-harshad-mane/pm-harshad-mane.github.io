@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Systematic Withdrawal Plan (SWP) Calculator</title>
+    <title>Systematic Withdrawal Plan Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,11 +68,14 @@
             background-color: #007bff;
             color: white;
         }
+        .negative {
+            background-color: #ffcccc;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Systematic Withdrawal Plan (SWP) Calculator</h2>
+        <h2>Systematic Withdrawal Plan ( SWP ) Calculator</h2>
         <form id="calculator-form">
             <label for="investment">Investment Amount:</label>
             <input type="text" id="investment" name="investment" required>
@@ -90,6 +93,7 @@
             <table id="resultsTable">
                 <thead>
                     <tr>
+                        <th>Index</th>
                         <th>Year</th>
                         <th>Monthly Withdrawal Amount</th>
                         <th>Current Value of Invested Amount</th>
@@ -129,7 +133,8 @@
             // Initialize variables
             let currentInvestment = investment;
             let currentMonthlyWithdrawal = monthlyWithdrawal;
-            const startYear = 2025;
+            const currentYear = new Date().getFullYear();
+            const startYear = currentYear + 1;
             
             // Calculate results
             for (let year = 0; year < years; year++) {
@@ -139,19 +144,27 @@
                 
                 // Create a new row and cells
                 const row = document.createElement('tr');
+                const indexCell = document.createElement('td');
                 const yearCell = document.createElement('td');
                 const withdrawalCell = document.createElement('td');
                 const investmentCell = document.createElement('td');
                 
                 // Set cell values with proper formatting
+                indexCell.textContent = year + 1;
                 yearCell.textContent = startYear + year;
                 withdrawalCell.textContent = currentMonthlyWithdrawal.toLocaleString('en-US');
                 investmentCell.textContent = currentInvestment.toLocaleString('en-US');
                 
                 // Append cells to row
+                row.appendChild(indexCell);
                 row.appendChild(yearCell);
                 row.appendChild(withdrawalCell);
                 row.appendChild(investmentCell);
+                
+                // Check for negative investment value and apply styling
+                if (currentInvestment < 0) {
+                    row.classList.add('negative');
+                }
                 
                 // Append row to table body
                 tableBody.appendChild(row);
