@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+ 
+    <script>
+    // Load Protobuf.js
+const script = document.createElement('script');
+script.src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js";
+document.head.appendChild(script);
+
+script.onload = () => {
+  console.log("Protobuf.js loaded");
+
+  // Inline .proto file as a string
+  const protoFileInline = `
+        syntax = "proto3";
+        
+        message Format {
+          int32 w = 1;
+          int32 h = 2;
+        }
+        
+        message Banner {
+          int32 w = 1;
+          int32 h = 2;
+          int32 pos = 3;
+          repeated Format format = 4;
+          int32 topframe = 5;
+        }
+        
+        message Imp {
+          string id = 1;
+          string tagid = 2;
+          double bidfloor = 3;
+          string bidfloorcur = 4;
+          int32 secure = 5;
+          Banner banner = 6;
+        }
+        
+        message Site {
+          string page = 1;
+          string domain = 2;
+          string ref = 3;
+        }
+        
+        message Device {
+          string ua = 1;
+          int32 js = 2;
+          int32 h = 3;
+          int32 w = 4;
+        }
+        
+        message ORTBRequest {
+          string id = 1;
+          int32 at = 2;
+          repeated string cur = 3;
+          repeated Imp imp = 4;
+          Site site = 5;
+          Device device = 6;
+        }`
+    ;
+
+  // Function to load the Protobuf definition from an inline string
+  function loadProtobufDefinitionFromString(protoFileString) {
+    return protobuf.parse(protoFileString, { keepCase: true }).root;
+  }
+
+  // Function to generate the Protobuf body
+  async function generateProtobufBody(protoFileString, messageType, payload) {
+    // Load the Protobuf definition
+    const root = loadProtobufDefinitionFromString(protoFileString);
+
+    // Get the message type
+    const MessageType = root.lookupType(messageType);
+
+    // Verify the payload against the schema
+    const errMsg = MessageType.verify(payload);
+    if (errMsg) throw new Error(`Invalid payload: ${errMsg}`);
+
+    // Encode the payload into a Protobuf buffer
+    return MessageType.encode(payload).finish();
+  }
+
+  // Function to decode a Protobuf response
+  async function decodeProtobufResponse(protoFileString, messageType, buffer) {
+    // Load the Protobuf definition
+    const root = loadProtobufDefinitionFromString(protoFileString);
+
+    // Get the message type
+    const MessageType = root.lookupType(messageType);
+
+    // Decode the buffer
+    return MessageType.decode(new Uint8Array(buffer));
+  }
+
+  // Function to send the request
+  async function sendRequest(endpoint, protoFileString, messageType, payload) {
+    try {
+      // Generate the Protobuf body
+      const protobufBody = await generateProtobufBody(protoFileString, messageType, payload);
+
+      // Send the request using Fetch
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-protobuf",
+        },
+        body: protobufBody,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+
+      // Check Content-Type of the response
+      const contentType = response.headers.get("Content-Type");
+      const rawResponse = await response.arrayBuffer(); // Raw response data
+
+      if (contentType && contentType.includes("application/x-protobuf")) {
+        // Decode Protobuf response
+        const decodedResponse = await decodeProtobufResponse(protoFileString, messageType, rawResponse);
+        console.log("Decoded Protobuf Response:", decodedResponse);
+      } else if (contentType && contentType.includes("application/json")) {
+        // Decode JSON response
+        const jsonResponse = JSON.parse(new TextDecoder().decode(new Uint8Array(rawResponse)));
+        console.log("JSON Response:", jsonResponse);
+      } else {
+        // Handle other response types (e.g., plain text)
+        const textResponse = new TextDecoder().decode(new Uint8Array(rawResponse));
+        console.log("Non-Protobuf Response:", textResponse);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  // Example usage
+  const messageType = "ORTBRequest"; // Fully qualified name of your message type
+  const endpoint = "https://httpbin.org/post"; // Test API endpoint
+  const payload = {"id":"1733198480633","at":1,"cur":["USD"],"imp":[{"id":"desktop-7","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":728,"h":90,"pos":0,"format":[{"w":728,"h":90}],"topframe":1}},{"id":"desktop-9","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":970,"h":90,"pos":0,"format":[{"w":970,"h":90},{"w":970,"h":250}],"topframe":1}},{"id":"desktop-1","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":300,"h":250,"pos":0,"format":[{"w":300,"h":250}],"topframe":1}},{"id":"desktop-2","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":300,"h":250,"pos":0,"format":[{"w":300,"h":250}],"topframe":1}},{"id":"desktop-3","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":300,"h":250,"pos":0,"format":[{"w":300,"h":250}],"topframe":1}},{"id":"desktop-4","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":300,"h":250,"pos":0,"format":[{"w":300,"h":250}],"topframe":1}},{"id":"desktop-5","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":300,"h":600,"pos":0,"format":[{"w":300,"h":600}],"topframe":1}},{"id":"desktop-6","tagid":"desktop","bidfloor":0.12,"bidfloorcur":"USD","secure":1,"ext":{},"banner":{"w":300,"h":600,"pos":0,"format":[{"w":300,"h":600}],"topframe":1}}],"site":{"page":"https://www.thesaurus.com/","domain":"thesaurus.com","ref":"https://www.dictionary.com/","publisher":{"id":"164247"}},"device":{"ua":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","js":1,"h":418,"w":1728,"dnt":0,"language":"en","geo":{}},"user":{"geo":{},"eids":[{"source":"id5-sync.com","uids":[{"id":"ID5*SwkYKSu_aM-pD5j2cU8x7ld9iQtGF6jnkr3VYtF3-rHVpxJJk9xLSUiIygxCnCuM","atype":1,"ext":{"linkType":2,"pba":"oZPjM1qGnHLCX5ntvfk6jMzgfO6RJfoQg7+Hu59r6os="}}]}],"ext":{"consent":"CQJE0kAQJE0kAAcABBENBSFsAP_gAAAAACiQKqNX_G__bXlj8X73aftkeY1f9_h7rsQxBhfJk-4FyLvW_JwX32EzNA36pqYKmRIAu3TBIQNlGIDURUCgaogVryDMaEyEoTNKJ6BkiFMRc2dYCFxvm4lD-QCY5vr991d52R-t7dr83dzyy4xHv3a5_-S1WJCdA5-tDfv9bROb-9IO9_x8v4v4_N_pE2_eT1l_tWvp7D9-cts__XW99_fff_9Pn_-uB_-_3__f_EAAABQSCWAAgABcAFAAVAA4AB4AEEAMgA1AB4AEQAJgAVQA3gB6AD8AISAQwBEgCOAEsAJoAVoAw4BlAGWANkAd8A9gD4gH2AfoBAACKQEXARgAjQBQQCoAFXALmAYoA0QBtADcAHEAQ6AkQBOwChwFHgKRAU2AtgBcgC7wF5gMNAZIAycBlwDOYGsAayA2MBt4DcwG6gOCAcmA5cB44D2gIQgQvgh6CH4FJQKXAU8AqABUYCpQFTggCYABwA5wCDgE_AQeAj0BIoCVgE2gKfAWEAvIBiADFoGQgZGA0YBqYDaAG3AN0AeUA-QB-4EBAIGQQRBBMCDAEKwIXAQ8AimBGACegFGQKPgUhApeBTIcA8AARAA4ADwALgA_ADQAOcAdwBAICDgIQAREAmgBPwCoAHSAQeAj0BIoCVgExAJlATaApABSYCuwFqALoAYgAxYBkIDJgGjANNAamA14BtADbAG3ANzAcfA50DnwHlAPiAfbA_YD9wIHgQRAgwBBsCFYEPAIpgRvAnoBRkCj4FJAKXgUyAqABVMdBWAAXABQAFQAOAAgABdADIANQAeABEACYAFWALgAugBiADeAHoAP0AhgCJAEsAJoAUYArQBhgDKAGiANkAd4A9oB9gH6AP-AigCMAFBAKuAWIAucBeQF6AMUAbQA3ABxADqAIQAQ6Ai8BIgCZAE7AKHAUfApoCmwFWALFAWwAuABcgC7QF3gLzAX0Aw0BjwDJAGTgMqgZYBlwDMwGcgNVAawA28BuoDiwHJgOXAeOA9oB9YD-wIAgQtAh0BD0CkoFLgKeAVGAqUBU4gAcAAQAGgAc4BYgEHgI9ATaApMBeQDUwG2ANuAc-A8oB8QD9gIHgQYAg2BCsCKYEaQI3gT0Ao-BSQCmQFUyECUABYAFAAXAA1ACqAFwAMQAbwA9ACOAHeAP8AigBKQCggFXALmAYoA2gB1IFNAU2AqwBYoC0QFwALkAZOAzkBqoDxwH9gQtAh0BD0CkoFLgKlEoFQACAAFgAUAA4ADwAIgATAAqgBcADFAIYAiQBHACjAFaANkAd4A_ACrgGKAOoAhABDoCLwEiAKPAU2AsUBbAC8wGTgMsAZyA1gBt4D2gIHgQ9ApKBS4CowFSgKnEgCIAFwB3AEAAKgAg8BHoCRQErAJtAUmAxYBuQDygH7gQRAgwBTIpBCAAXABQAFQAOAAggBkAGgAPAAiABMACkAFUAMQAfoBDAESAKMAVoAygBogDZAHfAPsA_QCLAEYAKCAVcAuYBeQDFAG0ANwAh0BF4CRAE7AKHAU2AqwBYoC2AFwALkAXaAvMBfQDDQGSAMngZYBlwDOYGsAayA28BuoDggHJgPHAe0A_sCEIELQIZwQ5BDoCkoFLgKeAVGAqUBU4oAoAAuAI4Ac4A7gCAAEiALEAXUA14B2wD_wIPAhABHoCRQExAJtAUgAp8BXYC6AF5AMWAZMA1MBrwDcwHlAPigfsB-4EDAIHgQTAgwBBsCFYEUwKSAUvAqABUsA.f_wAAAAAAAAA"}},"ext":{"wrapper":{"wp":"pbjs","wv":"prebid_prebid_8.7.0","transactionId":"efadce45-fd4f-4a11-8bed-451c12f6d4e9"}},"tmax":1000,"regs":{"ext":{"gdpr":1}}};
+
+  sendRequest(endpoint, protoFileInline, messageType, payload);
+};
+    </script>
+  </body>
+  </html>
