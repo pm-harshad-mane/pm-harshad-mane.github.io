@@ -99,8 +99,7 @@ script.onload = () => {
   // Function to send the request
   async function sendRequest(endpoint, protoFileString, messageType, payload) {
     try {
-
-
+      
       const jsonString = JSON.stringify(payload);
       const jsonSize = new Blob([jsonString]).size;
       
@@ -110,6 +109,7 @@ script.onload = () => {
       const protobufSize = protobufBody.length;
 
       // Output results
+      console.log(payload);
       console.log("JSON size (bytes):", jsonSize);
       console.log("Protobuf size (bytes):", protobufSize);
       console.log("Size reduction:", ((jsonSize - protobufSize) / jsonSize) * 100, "%");
