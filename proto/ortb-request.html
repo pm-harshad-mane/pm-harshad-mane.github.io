@@ -99,8 +99,20 @@ script.onload = () => {
   // Function to send the request
   async function sendRequest(endpoint, protoFileString, messageType, payload) {
     try {
+
+
+      const jsonString = JSON.stringify(payload);
+      const jsonSize = new Blob([jsonString]).size;
+      
       // Generate the Protobuf body
       const protobufBody = await generateProtobufBody(protoFileString, messageType, payload);
+
+      const protobufSize = protobufBody.length;
+
+      // Output results
+      console.log("JSON size (bytes):", jsonSize);
+      console.log("Protobuf size (bytes):", protobufSize);
+      console.log("Size reduction:", ((jsonSize - protobufSize) / jsonSize) * 100, "%");
 
       // Send the request using Fetch
       const response = await fetch(endpoint, {
