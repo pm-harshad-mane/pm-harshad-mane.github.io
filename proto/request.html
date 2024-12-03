@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+ 
+    <script>
+    // Load Protobuf.js
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js";
+    document.head.appendChild(script);
+    
+    script.onload = () => {
+      console.log("Protobuf.js loaded");
+    
+      // Inline .proto file as a string
+      const protoFileInline = `
+        syntax = "proto3";
+    
+        message ExampleMessage {
+          string name = 1;
+          int32 age = 2;
+          bool active = 3;
+        }`;
+    
+      // Function to load the Protobuf definition from an inline string
+      function loadProtobufDefinitionFromString(protoFileString) {
+        return protobuf.parse(protoFileString, { keepCase: true }).root;
+      }
+    
+      // Function to generate the Protobuf body
+      async function generateProtobufBody(protoFileString, messageType, payload) {
+        // Load the Protobuf definition
+        const root = loadProtobufDefinitionFromString(protoFileString);
+    
+        // Get the message type
+        const MessageType = root.lookupType(messageType);
+    
+        // Verify the payload against the schema
+        const errMsg = MessageType.verify(payload);
+        if (errMsg) throw new Error(`Invalid payload: ${errMsg}`);
+    
+        // Encode the payload into a Protobuf buffer
+        return MessageType.encode(payload).finish();
+      }
+    
+      // Function to decode a Protobuf response
+      async function decodeProtobufResponse(protoFileString, messageType, buffer) {
+        // Load the Protobuf definition
+        const root = loadProtobufDefinitionFromString(protoFileString);
+    
+        // Get the message type
+        const MessageType = root.lookupType(messageType);
+    
+        // Decode the buffer
+        return MessageType.decode(new Uint8Array(buffer));
+      }
+    
+      // Function to send the request
+      async function sendRequest(endpoint, protoFileString, messageType, payload) {
+        try {
+          // Generate the Protobuf body
+          const protobufBody = await generateProtobufBody(protoFileString, messageType, payload);
+    
+          // Send the request using Fetch
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-protobuf",
+            },
+            body: protobufBody,
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+          }
+    
+          // Check Content-Type of the response
+          const contentType = response.headers.get("Content-Type");
+          const rawResponse = await response.arrayBuffer(); // Raw response data
+    
+          if (contentType && contentType.includes("application/x-protobuf")) {
+            // Decode Protobuf response
+            const decodedResponse = await decodeProtobufResponse(protoFileString, messageType, rawResponse);
+            console.log("Decoded Protobuf Response:", decodedResponse);
+          } else if (contentType && contentType.includes("application/json")) {
+            // Decode JSON response
+            const jsonResponse = JSON.parse(new TextDecoder().decode(new Uint8Array(rawResponse)));
+            console.log("JSON Response:", jsonResponse);
+          } else {
+            // Handle other response types (e.g., plain text)
+            const textResponse = new TextDecoder().decode(new Uint8Array(rawResponse));
+            console.log("Non-Protobuf Response:", textResponse);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    
+      // Example usage
+      const messageType = "ExampleMessage"; // Fully qualified name of your message type
+      const endpoint = "https://httpbin.org/post"; // Test API endpoint
+      const payload = {
+        name: "Ria",
+        age: 37,
+        active: true,
+      };
+    
+      sendRequest(endpoint, protoFileInline, messageType, payload);
+    };
+    </script>
+  </body>
+  </html>
