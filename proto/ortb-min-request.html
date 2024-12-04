@@ -1,0 +1,37 @@
+<script src="compiled.js"></script> <!-- Precompiled Protobuf definitions -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ORTBRequest2 = protobuf.Root.fromJSON(require('./compiled.json')).lookupType('ORTBRequest2');
+
+    async function sendRequest(endpoint, payload) {
+      // Verify the payload
+      const errMsg = ORTBRequest2.verify(payload);
+      if (errMsg) throw new Error(`Invalid payload: ${errMsg}`);
+
+      // Encode payload into Protobuf buffer
+      const protobufBody = ORTBRequest2.encode(payload).finish();
+
+      // Send request
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-protobuf" },
+        body: protobufBody,
+      });
+
+      // Handle response
+      const contentType = response.headers.get("Content-Type");
+      const rawResponse = await response.arrayBuffer();
+      if (contentType.includes("application/x-protobuf")) {
+        const decodedResponse = ORTBRequest2.decode(new Uint8Array(rawResponse));
+        console.log("Decoded Protobuf Response:", decodedResponse);
+      } else {
+        console.log("Response:", new TextDecoder().decode(rawResponse));
+      }
+    }
+
+    const endpoint = "https://proto-worker.harshad.workers.dev/";
+    const payload = { /* Your payload here */ };
+
+    sendRequest(endpoint, payload);
+  });
+</script>
