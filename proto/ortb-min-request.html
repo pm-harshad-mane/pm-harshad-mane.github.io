@@ -8,14 +8,25 @@
     const ORTBRequest2 = $root.ORTBRequest2;
 
     async function sendRequest(endpoint, payload) {
+      
+      console.time("Protobuf serialization");
       // Verify the payload
+      // this step can be avoided in prod code but should be part of test cases
       const errMsg = ORTBRequest2.verify(payload);
       if (errMsg) throw new Error(`Invalid payload: ${errMsg}`);
-
       // Encode payload into Protobuf buffer
-      console.time("Protobuf serialization");
       const protobufBody = ORTBRequest2.encode(payload).finish();
       console.timeEnd("Protobuf serialization");
+
+      // calculate size
+      const protobufSize = protobufBody.length;
+      const jsonSize = new Blob([jsonString]).size;
+
+      console.log('updated proto');
+      console.log(payload);
+      console.log("JSON size (bytes):", jsonSize);
+      console.log("Protobuf size (bytes):", protobufSize);
+      console.log("Size reduction:", ((jsonSize - protobufSize) / jsonSize) * 100, "%");
 
       // Send request
       const response = await fetch(endpoint, {
@@ -29,7 +40,7 @@
       const rawResponse = await response.arrayBuffer();
       if (contentType.includes("application/x-protobuf")) {
         const decodedResponse = ORTBRequest2.decode(new Uint8Array(rawResponse));
-        console.log("Decoded Protobuf Response:", decodedResponse);
+        console.log("\n\nDecoded Protobuf Response:", decodedResponse);
       } else {
         console.log("Response:", new TextDecoder().decode(rawResponse));
       }
