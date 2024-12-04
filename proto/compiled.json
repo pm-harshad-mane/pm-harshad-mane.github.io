@@ -1,4 +1,4 @@
-{
+vra compiledJSON = {
   "options": {
     "syntax": "proto3"
   },
@@ -296,4 +296,4 @@
       }
     }
   }
-}
+};
