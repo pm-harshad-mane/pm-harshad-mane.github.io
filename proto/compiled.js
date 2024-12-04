@@ -2,7 +2,8 @@
 "use strict";
 
 // var $protobuf = require("protobufjs/minimal");
-// var $protobuf = protobuf;
+var $protobuf = protobuf;
+
 // Common aliases
 var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
 
