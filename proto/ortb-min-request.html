@@ -20,6 +20,7 @@
 
       // calculate size
       const protobufSize = protobufBody.length;
+      const jsonString = JSON.stringify(payload);
       const jsonSize = new Blob([jsonString]).size;
 
       console.log('updated proto');
