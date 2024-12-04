@@ -1,4 +1,4 @@
-vra compiledJSON = {
+var compiledJSON = {
   "options": {
     "syntax": "proto3"
   },
