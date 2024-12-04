@@ -1,9 +1,11 @@
 <script src="https://cdn.jsdelivr.net/npm/protobufjs/dist/minimal/protobuf.min.js"></script>
 <script src="compiled.js"></script> <!-- Precompiled Protobuf definitions -->
-<script src="compiled.json.js"></script>
+<!-- <script src="compiled.json.js"></script> -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const ORTBRequest2 = protobuf.Root.fromJSON(compiledJSON).lookupType('ORTBRequest2');
+    
+    // const ORTBRequest2 = protobuf.Root.fromJSON(compiledJSON).lookupType('ORTBRequest2');
+    const ORTBRequest2 = $root.ORTBRequest2;
 
     async function sendRequest(endpoint, payload) {
       // Verify the payload
