@@ -130,54 +130,6 @@ message ORTBRequest2 {
     Regs regs = 10;
 }
   `;
-  
-  const protoFileInline = `
-        syntax = "proto3";
-        
-        message Format {
-          int32 w = 1;
-          int32 h = 2;
-        }
-        
-        message Banner {
-          int32 w = 1;
-          int32 h = 2;
-          int32 pos = 3;
-          repeated Format format = 4;
-          int32 topframe = 5;
-        }
-        
-        message Imp {
-          string id = 1;
-          string tagid = 2;
-          double bidfloor = 3;
-          string bidfloorcur = 4;
-          int32 secure = 5;
-          Banner banner = 6;
-        }
-        
-        message Site {
-          string page = 1;
-          string domain = 2;
-          string ref = 3;
-        }
-        
-        message Device {
-          string ua = 1;
-          int32 js = 2;
-          int32 h = 3;
-          int32 w = 4;
-        }
-        
-        message ORTBRequest {
-          string id = 1;
-          int32 at = 2;
-          repeated string cur = 3;
-          repeated Imp imp = 4;
-          Site site = 5;
-          Device device = 6;
-        }`
-    ;
 
   // Function to load the Protobuf definition from an inline string
   function loadProtobufDefinitionFromString(protoFileString) {
