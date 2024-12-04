@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+message ORTBRequest2 {
+
+    message Ext {
+    }
+
+    message Format {
+        uint32 w = 1;
+        uint32 h = 2;
+    }
+
+    message Banner {
+        uint32 w = 1;
+        uint32 h = 2;
+        uint32 pos = 3;
+        repeated Format format = 4;
+        uint32 topframe = 5;
+    }
+
+    message Imp {
+        string id = 1;
+        string tagid = 2;
+        double bidfloor = 3;
+        string bidfloorcur = 4;
+        uint32 secure = 5;
+        Ext ext = 6;
+        Banner banner = 7;
+    }
+
+    message Publisher {
+        string id = 1;
+    }
+
+    message Site {
+        string page = 1;
+        string domain = 2;
+        string ref = 3;
+        Publisher publisher = 4;
+    }
+
+    message Geo {
+    }
+
+    message Device {
+        string ua = 1;
+        uint32 js = 2;
+        uint32 h = 3;
+        uint32 w = 4;
+        uint32 dnt = 5;
+        string language = 6;
+        Geo geo = 7;
+    }
+
+    message Geo1 {
+    }
+
+    message Ext1 {
+        uint32 link_type = 1;
+        string pba = 2;
+    }
+
+    message Uids {
+        string id = 1;
+        uint32 atype = 2;
+        Ext1 ext = 3;
+    }
+
+    message Eids {
+        string source = 1;
+        repeated Uids uids = 2;
+    }
+
+    message Ext2 {
+        string consent = 1;
+    }
+
+    message User {
+        Geo1 geo = 1;
+        repeated Eids eids = 2;
+        Ext2 ext = 3;
+    }
+
+    message Wrapper {
+        string wp = 1;
+        string wv = 2;
+        string transaction_id = 3;
+    }
+
+    message Ext3 {
+        Wrapper wrapper = 1;
+    }
+
+    message Ext4 {
+        uint32 gdpr = 1;
+    }
+
+    message Regs {
+        Ext4 ext = 1;
+    }
+
+    string id = 1;
+    uint32 at = 2;
+    repeated string cur = 3;
+    repeated Imp imp = 4;
+    Site site = 5;
+    Device device = 6;
+    User user = 7;
+    Ext3 ext = 8;
+    uint32 tmax = 9;
+    Regs regs = 10;
+}
