@@ -17,7 +17,7 @@
       // Encode payload into Protobuf buffer
       const protobufBody = ORTBRequest2.encode(payload).finish();
       console.timeEnd("Protobuf serialization");
-      console.log(protobufBody);
+      // console.log(protobufBody);
 
       // calculate size
       const protobufSize = protobufBody.length;
