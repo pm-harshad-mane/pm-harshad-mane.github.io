@@ -29,6 +29,13 @@
       console.log("Protobuf size (bytes):", protobufSize);
       console.log("Size reduction:", ((jsonSize - protobufSize) / jsonSize) * 100, "%");
 
+      console.log("sent json request as well...");
+      const response_json = await fetch("https://httpbin.org/post", {
+         method: "POST",
+        // headers: { "Content-Type": "application/x-protobuf" },
+        body: jsonString,
+      });
+      
       // Send request
       const response = await fetch(endpoint, {
         method: "POST",
