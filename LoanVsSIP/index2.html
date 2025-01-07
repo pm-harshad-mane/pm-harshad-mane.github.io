@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Interest vs Investment Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .calculator {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>Loan Interest vs Investment Calculator</h2>
+        <div class="input-group">
+            <label for="loanAmount">Loan Amount (₹):</label>
+            <input type="number" id="loanAmount" placeholder="Enter loan amount" />
+        </div>
+        <div class="input-group">
+            <label for="loanTenure">Loan Tenure (Years):</label>
+            <input type="number" id="loanTenure" placeholder="Enter loan tenure in years" />
+        </div>
+        <div class="input-group">
+            <label for="loanInterestRate">Loan Interest Rate (% per year):</label>
+            <input type="number" id="loanInterestRate" placeholder="Enter annual loan interest rate" />
+        </div>
+        <div class="input-group">
+            <label for="investmentReturnRate">Expected Investment Return Rate (% per year):</label>
+            <input type="number" id="investmentReturnRate" placeholder="Enter annual investment return rate" />
+        </div>
+        <button onclick="calculateInvestment()">Calculate</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateInvestment() {
+            // Inputs
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const loanTenure = parseInt(document.getElementById('loanTenure').value);
+            const loanInterestRate = parseFloat(document.getElementById('loanInterestRate').value) / 100;
+            const investmentReturnRate = parseFloat(document.getElementById('investmentReturnRate').value) / 100;
+
+            if (isNaN(loanAmount) || isNaN(loanTenure) || isNaN(loanInterestRate) || isNaN(investmentReturnRate)) {
+                document.getElementById('result').innerHTML = "Please fill in all the fields with valid numbers.";
+                return;
+            }
+
+            // Loan calculations
+            const monthlyInterestRate = loanInterestRate / 12;
+            const totalMonths = loanTenure * 12;
+            const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths) / (Math.pow(1 + monthlyInterestRate, totalMonths) - 1);
+            const totalInterestPaid = emi * totalMonths - loanAmount;
+
+            // Investment calculations
+            const monthlyReturnRate = investmentReturnRate / 12;
+            const requiredMonthlyInvestment = totalInterestPaid * monthlyReturnRate / (Math.pow(1 + monthlyReturnRate, totalMonths) - 1);
+
+            // Display result
+            document.getElementById('result').innerHTML = `
+                <p>Total Interest Paid on Loan: ₹${totalInterestPaid.toFixed(2)}</p>
+                <p>Required Monthly Investment: ₹${requiredMonthlyInvestment.toFixed(2)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
