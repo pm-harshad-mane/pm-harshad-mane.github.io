@@ -45,6 +45,21 @@
             margin-top: 20px;
             font-size: 1.1em;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
@@ -105,11 +120,65 @@
             const totalYears = loanTenure;
             const oneTimeInvestment = Math.floor(totalInterestPaid / Math.pow(1 + investmentReturnRate, totalYears));
 
+            // Prepare data for the table
+            let accumulatedInvestment = oneTimeInvestment;
+            let annualData = [];
+            let remainingPrincipal = loanAmount;
+            let totalInterestPaidSoFar = 0;
+
+            for (let year = 1; year <= loanTenure; year++) {
+                let annualInterestPaid = 0;
+
+                for (let month = 1; month <= 12; month++) {
+                    const interestForMonth = remainingPrincipal * monthlyInterestRate;
+                    annualInterestPaid += Math.floor(interestForMonth);
+                    remainingPrincipal -= (emi - interestForMonth);
+                }
+
+                totalInterestPaidSoFar += annualInterestPaid;
+                accumulatedInvestment = Math.floor(accumulatedInvestment * (1 + investmentReturnRate));
+
+                annualData.push({
+                    year: year,
+                    annualInterestPaid: annualInterestPaid,
+                    totalInterestPaidSoFar: totalInterestPaidSoFar,
+                    accumulatedInvestment: accumulatedInvestment
+                });
+            }
+
             // Display results
-            document.getElementById('result').innerHTML = `
+            let resultHTML = `
                 <p><strong>Total Interest Paid on Loan:</strong> ₹${totalInterestPaid.toLocaleString('en-IN')}</p>
                 <p><strong>Required One-Time Investment:</strong> ₹${oneTimeInvestment.toLocaleString('en-IN')}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Annual Interest Paid (₹)</th>
+                            <th>Total Interest Paid So Far (₹)</th>
+                            <th>Accumulated Investment Value (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
+
+            annualData.forEach(data => {
+                resultHTML += `
+                    <tr>
+                        <td>${data.year}</td>
+                        <td>${data.annualInterestPaid.toLocaleString('en-IN')}</td>
+                        <td>${data.totalInterestPaidSoFar.toLocaleString('en-IN')}</td>
+                        <td>${data.accumulatedInvestment.toLocaleString('en-IN')}</td>
+                    </tr>
+                `;
+            });
+
+            resultHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('result').innerHTML = resultHTML;
         }
     </script>
 </body>
