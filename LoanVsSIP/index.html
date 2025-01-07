@@ -104,6 +104,7 @@
 
             let remainingPrincipal = loanAmount;
             let annualData = [];
+            let totalInterestPaidSoFar = 0;
 
             // Calculate required monthly investment
             const monthlyReturnRate = investmentReturnRate / 12;
@@ -115,7 +116,6 @@
 
             for (let year = 1; year <= loanTenure; year++) {
                 let annualInterestPaid = 0;
-                let annualInvestment = 0;
 
                 for (let month = 1; month <= 12; month++) {
                     const interestForMonth = remainingPrincipal * monthlyInterestRate;
@@ -124,13 +124,14 @@
 
                     // Monthly investment accumulation
                     accumulatedInvestment = Math.floor((accumulatedInvestment + requiredMonthlyInvestment) * (1 + monthlyReturnRate));
-                    annualInvestment += requiredMonthlyInvestment;
                 }
+
+                totalInterestPaidSoFar += annualInterestPaid;
 
                 annualData.push({
                     year: year,
                     annualInterestPaid: annualInterestPaid,
-                    annualInvestment: annualInvestment,
+                    totalInterestPaidSoFar: totalInterestPaidSoFar,
                     accumulatedInvestment: accumulatedInvestment
                 });
             }
@@ -144,7 +145,7 @@
                         <tr>
                             <th>Year</th>
                             <th>Annual Interest Paid (₹)</th>
-                            <th>Investment Made (₹)</th>
+                            <th>Total Interest Paid So Far (₹)</th>
                             <th>Accumulated Investment Value (₹)</th>
                         </tr>
                     </thead>
@@ -156,7 +157,7 @@
                     <tr>
                         <td>${data.year}</td>
                         <td>${data.annualInterestPaid.toLocaleString()}</td>
-                        <td>${data.annualInvestment.toLocaleString()}</td>
+                        <td>${data.totalInterestPaidSoFar.toLocaleString()}</td>
                         <td>${data.accumulatedInvestment.toLocaleString()}</td>
                     </tr>
                 `;
