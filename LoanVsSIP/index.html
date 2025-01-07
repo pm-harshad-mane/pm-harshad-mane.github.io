@@ -101,47 +101,51 @@
             const monthlyInterestRate = loanInterestRate / 12;
             const totalMonths = loanTenure * 12;
             const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths) / (Math.pow(1 + monthlyInterestRate, totalMonths) - 1);
-            let totalInterestPaid = 0;
+
             let remainingPrincipal = loanAmount;
-
-            const monthlyReturnRate = investmentReturnRate / 12;
-            let totalInvestment = 0;
-            let accumulatedInvestment = 0;
-
             let annualData = [];
+
+            // Calculate required monthly investment
+            const monthlyReturnRate = investmentReturnRate / 12;
+            const totalInterestPaid = emi * totalMonths - loanAmount;
+            const requiredMonthlyInvestment = Math.floor(totalInterestPaid * monthlyReturnRate / (Math.pow(1 + monthlyReturnRate, totalMonths) - 1));
+            const requiredAnnualInvestment = requiredMonthlyInvestment * 12;
+
+            let accumulatedInvestment = 0;
 
             for (let year = 1; year <= loanTenure; year++) {
                 let annualInterestPaid = 0;
+                let annualInvestment = 0;
 
                 for (let month = 1; month <= 12; month++) {
                     const interestForMonth = remainingPrincipal * monthlyInterestRate;
-                    annualInterestPaid += interestForMonth;
+                    annualInterestPaid += Math.floor(interestForMonth);
                     remainingPrincipal -= (emi - interestForMonth);
-                    totalInvestment += emi;
 
-                    // Accumulate investment returns
-                    accumulatedInvestment = (accumulatedInvestment + emi) * (1 + monthlyReturnRate);
+                    // Monthly investment accumulation
+                    accumulatedInvestment = Math.floor((accumulatedInvestment + requiredMonthlyInvestment) * (1 + monthlyReturnRate));
+                    annualInvestment += requiredMonthlyInvestment;
                 }
 
-                totalInterestPaid += annualInterestPaid;
-
-                // Push data for the current year
                 annualData.push({
                     year: year,
-                    annualInterestPaid: annualInterestPaid.toFixed(2),
-                    accumulatedInvestment: accumulatedInvestment.toFixed(2),
+                    annualInterestPaid: annualInterestPaid,
+                    annualInvestment: annualInvestment,
+                    accumulatedInvestment: accumulatedInvestment
                 });
             }
 
             // Display results
             let resultHTML = `
-                <p>Total Interest Paid on Loan: ₹${totalInterestPaid.toFixed(2)}</p>
+                <p><strong>Suggested Monthly Investment:</strong> ₹${requiredMonthlyInvestment}</p>
+                <p><strong>Suggested Annual Investment:</strong> ₹${requiredAnnualInvestment}</p>
                 <table>
                     <thead>
                         <tr>
                             <th>Year</th>
                             <th>Annual Interest Paid (₹)</th>
-                            <th>Accumulated Investment (₹)</th>
+                            <th>Investment Made (₹)</th>
+                            <th>Accumulated Investment Value (₹)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,8 +155,9 @@
                 resultHTML += `
                     <tr>
                         <td>${data.year}</td>
-                        <td>${data.annualInterestPaid}</td>
-                        <td>${data.accumulatedInvestment}</td>
+                        <td>${data.annualInterestPaid.toLocaleString()}</td>
+                        <td>${data.annualInvestment.toLocaleString()}</td>
+                        <td>${data.accumulatedInvestment.toLocaleString()}</td>
                     </tr>
                 `;
             });
