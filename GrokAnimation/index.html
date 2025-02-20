@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Border Cursor Glow</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+        }
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+        input, button {
+            font-size: 20px;
+            padding: 10px;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <input type="text" id="textInput" placeholder="Enter text" />
+        <button onclick="updateText()">Update Text</button>
+    </div>
+    <canvas id="neonCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("neonCanvas");
+        const ctx = canvas.getContext("2d");
+        let mouseX = -100;
+        let mouseY = -100;
+        let text = "GROK";
+        let fontSize;
+        let colors = ["#ff00ff", "#00ffff", "#ff9900", "#ff0000", "#00ff00", "#ff66cc", "#6600ff"];
+        let letterColors = text.split('').map(() => getRandomColor());
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function updateColors() {
+            for (let i = 0; i < letterColors.length; i++) {
+                letterColors[i] = getRandomColor();
+            }
+            drawText();
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            fontSize = canvas.width * 0.85 / text.length; // Adjust font size to fit 85% width
+            drawText();
+        }
+
+        function drawText() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = `${fontSize}px Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            const x = canvas.width / 2;
+            const y = canvas.height / 2;
+            
+            // Draw base text stroke
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.strokeText(text, x, y);
+            
+            // Glow effect with larger area coverage
+            let charX = x - (ctx.measureText(text).width / 2);
+            for (let i = 0; i < text.length; i++) {
+                let charWidth = ctx.measureText(text[i]).width;
+                let gradient = ctx.createRadialGradient(mouseX, mouseY, 10, mouseX, mouseY, 80); // Increased coverage
+                gradient.addColorStop(0, letterColors[i]);
+                gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 4;
+                ctx.strokeText(text[i], charX + charWidth / 2, y);
+                charX += charWidth;
+            }
+        }
+
+        function updateMousePosition(event) {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+            requestAnimationFrame(drawText); // Ensures smooth rendering without flickering
+        }
+
+        function updateText() {
+            const userInput = document.getElementById("textInput").value;
+            if (userInput.trim() !== "") {
+                text = userInput;
+                letterColors = text.split('').map(() => getRandomColor());
+                resizeCanvas();
+            }
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        window.addEventListener("mousemove", updateMousePosition);
+        resizeCanvas();
+        
+        // Change character colors every 1 second if the mouse is not hovering
+        setInterval(updateColors, 1000);
+    </script>
+</body>
+</html>
