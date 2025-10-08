@@ -5,5 +5,31 @@ src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
 async
 ></script>
   </head>
-  <body></body>
+  <body>
+    <div id="my-chat"></div>
+    <script>    
+  const chatkit = document.getElementById('my-chat');
+  chatkit.setOptions({
+    api: {
+      getClientSecret(currentClientSecret) {
+        if (!currentClientSecret) {
+          const res = await fetch('/api/chatkit/start', { method: 'POST' })
+          const {client_secret} = await res.json();
+          return client_secret
+        }
+        const res = await fetch('/api/chatkit/refresh', {
+          method: 'POST',
+          body: JSON.stringify({ currentClientSecret })
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const {client_secret} = await res.json();
+        return client_secret
+      }
+    },
+  });
+
+    </script>
+  </body>
 </html>
