@@ -1,79 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>PubMatic — Markerless WebAR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <!-- A-Frame (WebXR-capable) -->
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <style>
-    html, body { margin: 0; height: 100%; background:#000; overflow: hidden; }
-    .hint { position: fixed; left:0; right:0; bottom:10px; text-align:center; color:#fff;
-            font-family: system-ui, sans-serif; font-size:14px; opacity:.8; }
-  </style>
-</head>
-<body>
-  <div class="hint">Tap “Enter AR” and move your phone a bit.</div>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>PubMatic AR</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.2/aframe/build/aframe-ar-nft.js"></script>
+    <style>
+      html, body { margin: 0; overflow: hidden; height: 100%; }
+      /* transparent background so camera shows through */
+      a-scene { background: transparent !important; }
+    </style>
+  </head>
 
-  <!-- Keep it simple: no dom-overlay, no hit-test required -->
-  <a-scene
-    embedded
-    renderer="alpha:true; antialias:true; physicallyCorrectLights:true; colorManagement:true"
-    xr-mode-ui="enabled: true"
-    webxr="optionalFeatures: local-floor"
-  >
-    <!-- Camera -->
-    <a-entity id="cameraRig">
-      <a-entity id="camera" camera look-controls></a-entity>
-    </a-entity>
+  <body>
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false"
+      renderer="antialias: true; alpha: true"
+    >
+      <a-entity camera></a-entity>
 
-    <!-- Ambient light so text is always visible -->
-    <a-entity light="type: ambient; intensity: 1"></a-entity>
-
-    <!-- Placeholder text: will be repositioned to 1.2m in front on AR start -->
-    <a-entity
-      id="pubText"
-      text="value: PubMatic; align: center; color: #00FFFF; width: 2.5; anchor: center; baseline: center"
-      position="0 0 -1.2"
-      scale="1.6 1.6 1.6"
-    ></a-entity>
-  </a-scene>
-
-  <script>
-    // On entering AR, place the text ~1.2m in front of the camera in world space.
-    const scene = document.querySelector('a-scene');
-    const textEl = document.getElementById('pubText');
-
-    function placeInFront() {
-      const cam = scene.camera;
-      if (!cam) return;
-      // Direction the camera is looking
-      const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion).normalize();
-      const pos = cam.getWorldPosition(new THREE.Vector3());
-      // 1.2 meters in front
-      const target = pos.clone().add(dir.multiplyScalar(1.2));
-      // Optional: keep at roughly chest height
-      target.y = Math.max(target.y, pos.y - 0.1);
-
-      textEl.object3D.position.copy(target);
-      // Make the text face the camera once at placement
-      textEl.object3D.lookAt(pos);
-    }
-
-    // A-Frame fires 'enter-vr' for both VR and AR; check if it's AR
-    scene.addEventListener('enter-vr', () => {
-      const xrSession = scene.renderer.xr.getSession && scene.renderer.xr.getSession();
-      if (xrSession && xrSession.environmentBlendMode === 'additive' || xrSession?.mode === 'immersive-ar') {
-        // Place once at session start
-        placeInFront();
-        // Re-adjust slightly as tracking stabilizes
-        let n = 0;
-        const id = scene.sceneEl.renderer.setAnimationLoop(() => {
-          placeInFront();
-          if (++n > 20) scene.sceneEl.renderer.setAnimationLoop(null);
-        });
-      }
-    });
-  </script>
-</body>
+      <!-- Cyan text appears ~1m ahead -->
+      <a-entity
+        position="0 0 -1"
+        text="value: PubMatic; align: center; color: #00FFFF; width: 3; anchor: center;"
+        scale="2 2 2"
+      ></a-entity>
+    </a-scene>
+  </body>
 </html>
