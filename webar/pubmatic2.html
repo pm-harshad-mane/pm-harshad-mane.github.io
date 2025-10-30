@@ -6,27 +6,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <style>
-  html, body { margin:0; height:100%; overflow:hidden; }
-  /* Branded one-tap overlay */
+  html, body { margin:0; height:100%; overflow:hidden; background:transparent; }
+  canvas { background: transparent !important; } /* show camera passthrough */
   #startOverlay {
     position: fixed; inset: 0; display: grid; place-items: center;
     background: #000; color: #00FFFF; font-family: system-ui, -apple-system, sans-serif;
-    font-size: 20px; letter-spacing: .5px;
+    font-size: 20px; letter-spacing: .4px; z-index: 10; text-align: center;
   }
   #startOverlay .btn {
-    border: 1px solid #00FFFF; padding: 14px 20px; border-radius: 12px; margin-top: 12px;
-    color: #00FFFF; text-align: center;
+    border: 1px solid #00FFFF; padding: 14px 22px; border-radius: 12px; margin-top: 12px;
+    display: inline-block;
+  }
+  #errorBox {
+    position: fixed; left: 12px; right: 12px; bottom: 12px;
+    background: rgba(0,0,0,.7); color:#fff; padding:10px 12px; border-radius:10px;
+    font: 14px system-ui, -apple-system, sans-serif; display:none; z-index: 11;
   }
 </style>
 </head>
 <body>
 
 <div id="startOverlay">
-  <div style="text-align:center">
+  <div>
     <div>Tap to start AR</div>
     <div class="btn">Launch</div>
   </div>
 </div>
+<div id="errorBox"></div>
 
 <a-scene
   embedded
@@ -43,89 +49,109 @@
   <!-- Lighting -->
   <a-entity light="type: ambient; intensity: 1"></a-entity>
 
-  <!-- PubMatic text (will be positioned when AR session starts) -->
+  <!-- PubMatic text (hidden until placed) -->
   <a-entity id="pubText"
     text="value: PubMatic; color: #00FFFF; align: center; width: 2.8; anchor: center; baseline: center"
-    visible="false"  <!-- shown after placement -->
+    visible="false"
     scale="1.4 1.4 1.4">
   </a-entity>
 </a-scene>
 
 <script>
-const scene = document.querySelector('a-scene');
+const scene   = document.querySelector('a-scene');
 const overlay = document.getElementById('startOverlay');
+const errBox  = document.getElementById('errorBox');
 const pubText = document.getElementById('pubText');
 
+function showError(msg) {
+  errBox.textContent = msg;
+  errBox.style.display = 'block';
+}
+
 async function startAR() {
-  overlay.style.display = 'none';           // hide overlay
-  // Ask A-Frame to enter immersive AR
-  await scene.enterVR();
-
-  // Wait for XR session
-  const xr = scene.renderer.xr;
-  const session = xr.getSession && xr.getSession();
-  if (!session) { console.warn('No XR session'); return; }
-
-  // Try plane hit-test to anchor text on a real surface
-  let placed = false;
   try {
-    const viewerSpace = await session.requestReferenceSpace('viewer');
-    const localSpace  = await session.requestReferenceSpace('local-floor');
-    const hitSource   = await session.requestHitTestSource({ space: viewerSpace });
+    if (!('xr' in navigator)) {
+      showError('WebXR not available in this browser.');
+      return;
+    }
+    const supported = await navigator.xr.isSessionSupported('immersive-ar');
+    if (!supported) {
+      showError('Immersive AR not supported on this device/browser.');
+      return;
+    }
 
-    const onXRFrame = (time, frame) => {
-      const hitResults = frame.getHitTestResults(hitSource);
-      if (hitResults.length > 0) {
-        const hit = hitResults[0];
-        const pose = hit.getPose(localSpace);
-        if (pose) {
-          const p = pose.transform.position;
-          pubText.object3D.position.set(p.x, p.y + 0.02, p.z); // a hair above the plane
-          // Make it face the camera once
-          const cam = scene.camera;
-          if (cam) pubText.object3D.lookAt(cam.getWorldPosition(new THREE.Vector3()));
-          pubText.setAttribute('visible', 'true');
-          placed = true;
-          session.requestAnimationFrame(() => {}); // noop; keep session alive
-          // Stop listening after first placement
-          session.removeEventListener('end', endHandler);
-          xr.setAnimationLoop(null);
-        }
-      }
-    };
-    const endHandler = () => { xr.setAnimationLoop(null); };
-    session.addEventListener('end', endHandler);
+    overlay.style.display = 'none';
 
-    // Run hit-test for up to ~1 second; otherwise fallback
-    let frames = 0;
-    xr.setAnimationLoop((t, frame) => {
-      if (!placed && frame) onXRFrame(t, frame);
-      if (!placed && ++frames > 60) { // ~1s at 60fps
-        fallbackPlace();
-        xr.setAnimationLoop(null);
-      }
+    // Request AR session directly (works reliably on iOS Safari)
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['local-floor'],
+      optionalFeatures: ['hit-test']
     });
+
+    // Hand the session to A-Frame’s renderer
+    const renderer = scene.renderer;
+    renderer.xr.setReferenceSpaceType('local-floor');
+    await renderer.xr.setSession(session);
+
+    // Try hit-test to anchor on a real surface; fallback if no result
+    let placed = false;
+    try {
+      const viewerSpace = await session.requestReferenceSpace('viewer');
+      const localSpace  = await session.requestReferenceSpace('local-floor');
+      const hitSource   = await session.requestHitTestSource({ space: viewerSpace });
+
+      let frames = 0;
+      renderer.setAnimationLoop((t, frame) => {
+        if (placed || !frame) return;
+        const results = frame.getHitTestResults(hitSource);
+        if (results && results.length) {
+          const pose = results[0].getPose(localSpace);
+          if (pose) {
+            const p = pose.transform.position;
+            pubText.object3D.position.set(p.x, p.y + 0.02, p.z);
+            // Face the camera once
+            const cam = scene.camera;
+            if (cam) pubText.object3D.lookAt(cam.getWorldPosition(new THREE.Vector3()));
+            pubText.setAttribute('visible', 'true');
+            placed = true;
+          }
+        }
+        // ~1s grace period for hit-test; then fallback
+        if (!placed && ++frames > 60) {
+          fallbackPlace();
+          placed = true;
+        }
+      });
+    } catch (e) {
+      // Hit-test path failed — fallback immediately
+      fallbackPlace();
+    }
+
+    // Clean up loop on session end
+    session.addEventListener('end', () => {
+      try { renderer.setAnimationLoop(null); } catch {}
+    });
+
   } catch (e) {
-    // Hit-test unsupported → fallback
-    fallbackPlace();
+    console.error(e);
+    showError('Could not start AR session. Ensure HTTPS and Safari iOS 17+.');
   }
 }
 
 function fallbackPlace() {
-  const cam = scene.camera;
+  const cam = scene.camera; if (!cam) return;
   const dir = new THREE.Vector3(0,0,-1).applyQuaternion(cam.quaternion).normalize();
   const pos = cam.getWorldPosition(new THREE.Vector3());
   const target = pos.clone().add(dir.multiplyScalar(1.5));
-  // Keep at roughly chest height
   target.y = Math.max(target.y, pos.y - 0.1);
   pubText.object3D.position.copy(target);
   pubText.object3D.lookAt(pos);
   pubText.setAttribute('visible', 'true');
 }
 
-overlay.addEventListener('click', startAR, { once: true });
-overlay.addEventListener('touchstart', (e) => { e.preventDefault(); startAR(); }, { once: true });
-
+const once = { once: true };
+overlay.addEventListener('click', startAR, once);
+overlay.addEventListener('touchstart', (e) => { e.preventDefault(); startAR(); }, once);
 </script>
 </body>
 </html>
