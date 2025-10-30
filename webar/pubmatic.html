@@ -1,37 +1,88 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>PubMatic AR Example</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.2/aframe/build/aframe-ar.js"></script>
-    <style>
-      body, html { margin: 0; overflow: hidden; height: 100%; }
-    </style>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PubMatic — Markerless WebAR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <!-- A-Frame (WebXR-capable) -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background:#000; }
+    #unsupported {
+      position: fixed; inset: 0; display:none; place-items:center; padding: 20px;
+      color: #fff; background: #000; text-align: center; font-family: system-ui, sans-serif;
+    }
+    .ui {
+      position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 14px;
+      display: flex; justify-content: center; pointer-events: none;
+      font-family: system-ui, sans-serif;
+    }
+    .ui span {
+      background: rgba(0,0,0,.45); color: #fff; border-radius: 12px; padding: 8px 12px;
+      pointer-events: auto; font-size: 14px; backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body>
+  <div id="unsupported">
+    <div>
+      <h2>AR not supported</h2>
+      <p>This demo needs a WebXR-capable browser over HTTPS (iOS 17+/Safari or recent Chrome/Android).</p>
+    </div>
+  </div>
 
-  <body>
-    <!-- AR.js + A-Frame Scene -->
-    <a-scene
-      embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-      vr-mode-ui="enabled: false"
-      renderer="logarithmicDepthBuffer: true"
-    >
-      <!-- Camera setup -->
-      <a-marker preset="hiro">
-        <!-- Cyan 3D text -->
-        <a-text
-          value="PubMatic"
-          color="#00FFFF"
-          align="center"
-          position="0 0.5 0"
-          scale="2 2 2"
-          rotation="-90 0 0"
-        ></a-text>
-      </a-marker>
+  <!-- Markerless AR scene -->
+  <a-scene
+    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true; antialias: true"
+    xr-mode-ui="enabled: true"              <!-- shows an “Enter AR” button -->
+    webxr="mode: ar; optionalFeatures: local-floor,dom-overlay; overlayElement: #hud"
+    embedded
+  >
+    <!-- Light so text is visible in all conditions -->
+    <a-entity light="type: ambient; intensity: 1"></a-entity>
 
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
+    <!-- Camera -->
+    <a-entity id="cameraRig">
+      <a-entity id="camera" camera look-controls wasd-controls="enabled:false"></a-entity>
+    </a-entity>
+
+    <!-- Cyan 3D text ~1.2m in front of camera; faces camera (billboard) -->
+    <a-entity
+      id="pubmaticText"
+      position="0 0 -1.2"
+      rotation="0 0 0"
+      scale="1.6 1.6 1.6"
+      face-camera
+      text="value: PubMatic; align: center; color: #00FFFF; width: 2.5; anchor: center; baseline: center"
+    ></a-entity>
+
+    <!-- Optional unobtrusive HUD container for dom-overlay -->
+    <div id="hud" class="ui"><span>Move your phone to place “PubMatic” in space.</span></div>
+  </a-scene>
+
+  <script>
+    // Simple billboard so the text always faces the viewer
+    AFRAME.registerComponent('face-camera', {
+      tick: function () {
+        const cam = this.el.sceneEl.camera;
+        if (!cam) return;
+        this.el.object3D.lookAt(cam.position);
+      }
+    });
+
+    // Graceful support check
+    (function ensureSupport() {
+      const supported = navigator.xr && navigator.xr.isSessionSupported;
+      if (!supported) {
+        document.getElementById('unsupported').style.display = 'grid';
+      } else {
+        navigator.xr.isSessionSupported('immersive-ar').then(ok => {
+          if (!ok) document.getElementById('unsupported').style.display = 'grid';
+        }).catch(() => {
+          document.getElementById('unsupported').style.display = 'grid';
+        });
+      }
+    })();
+  </script>
+</body>
 </html>
