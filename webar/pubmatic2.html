@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PubMatic — Anchored Markerless WebAR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+<style>
+  html, body { margin:0; height:100%; overflow:hidden; }
+  /* Branded one-tap overlay */
+  #startOverlay {
+    position: fixed; inset: 0; display: grid; place-items: center;
+    background: #000; color: #00FFFF; font-family: system-ui, -apple-system, sans-serif;
+    font-size: 20px; letter-spacing: .5px;
+  }
+  #startOverlay .btn {
+    border: 1px solid #00FFFF; padding: 14px 20px; border-radius: 12px; margin-top: 12px;
+    color: #00FFFF; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div id="startOverlay">
+  <div style="text-align:center">
+    <div>Tap to start AR</div>
+    <div class="btn">Launch</div>
+  </div>
+</div>
+
+<a-scene
+  embedded
+  renderer="alpha:true; antialias:true; physicallyCorrectLights:true; colorManagement:true"
+  xr-mode-ui="enabled:false"
+  webxr="mode: ar; requiredFeatures: local-floor; optionalFeatures: hit-test"
+  vr-mode-ui="enabled:false"
+>
+  <!-- Camera -->
+  <a-entity id="cameraRig">
+    <a-entity id="camera" camera look-controls></a-entity>
+  </a-entity>
+
+  <!-- Lighting -->
+  <a-entity light="type: ambient; intensity: 1"></a-entity>
+
+  <!-- PubMatic text (will be positioned when AR session starts) -->
+  <a-entity id="pubText"
+    text="value: PubMatic; color: #00FFFF; align: center; width: 2.8; anchor: center; baseline: center"
+    visible="false"  <!-- shown after placement -->
+    scale="1.4 1.4 1.4">
+  </a-entity>
+</a-scene>
+
+<script>
+const scene = document.querySelector('a-scene');
+const overlay = document.getElementById('startOverlay');
+const pubText = document.getElementById('pubText');
+
+async function startAR() {
+  overlay.style.display = 'none';           // hide overlay
+  // Ask A-Frame to enter immersive AR
+  await scene.enterVR();
+
+  // Wait for XR session
+  const xr = scene.renderer.xr;
+  const session = xr.getSession && xr.getSession();
+  if (!session) { console.warn('No XR session'); return; }
+
+  // Try plane hit-test to anchor text on a real surface
+  let placed = false;
+  try {
+    const viewerSpace = await session.requestReferenceSpace('viewer');
+    const localSpace  = await session.requestReferenceSpace('local-floor');
+    const hitSource   = await session.requestHitTestSource({ space: viewerSpace });
+
+    const onXRFrame = (time, frame) => {
+      const hitResults = frame.getHitTestResults(hitSource);
+      if (hitResults.length > 0) {
+        const hit = hitResults[0];
+        const pose = hit.getPose(localSpace);
+        if (pose) {
+          const p = pose.transform.position;
+          pubText.object3D.position.set(p.x, p.y + 0.02, p.z); // a hair above the plane
+          // Make it face the camera once
+          const cam = scene.camera;
+          if (cam) pubText.object3D.lookAt(cam.getWorldPosition(new THREE.Vector3()));
+          pubText.setAttribute('visible', 'true');
+          placed = true;
+          session.requestAnimationFrame(() => {}); // noop; keep session alive
+          // Stop listening after first placement
+          session.removeEventListener('end', endHandler);
+          xr.setAnimationLoop(null);
+        }
+      }
+    };
+    const endHandler = () => { xr.setAnimationLoop(null); };
+    session.addEventListener('end', endHandler);
+
+    // Run hit-test for up to ~1 second; otherwise fallback
+    let frames = 0;
+    xr.setAnimationLoop((t, frame) => {
+      if (!placed && frame) onXRFrame(t, frame);
+      if (!placed && ++frames > 60) { // ~1s at 60fps
+        fallbackPlace();
+        xr.setAnimationLoop(null);
+      }
+    });
+  } catch (e) {
+    // Hit-test unsupported → fallback
+    fallbackPlace();
+  }
+}
+
+function fallbackPlace() {
+  const cam = scene.camera;
+  const dir = new THREE.Vector3(0,0,-1).applyQuaternion(cam.quaternion).normalize();
+  const pos = cam.getWorldPosition(new THREE.Vector3());
+  const target = pos.clone().add(dir.multiplyScalar(1.5));
+  // Keep at roughly chest height
+  target.y = Math.max(target.y, pos.y - 0.1);
+  pubText.object3D.position.copy(target);
+  pubText.object3D.lookAt(pos);
+  pubText.setAttribute('visible', 'true');
+}
+
+overlay.addEventListener('click', startAR, { once: true });
+overlay.addEventListener('touchstart', (e) => { e.preventDefault(); startAR(); }, { once: true });
+
+</script>
+</body>
+</html>
