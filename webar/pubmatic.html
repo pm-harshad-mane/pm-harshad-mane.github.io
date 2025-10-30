@@ -7,82 +7,73 @@
   <!-- A-Frame (WebXR-capable) -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <style>
-    html, body { margin: 0; height: 100%; overflow: hidden; background:#000; }
-    #unsupported {
-      position: fixed; inset: 0; display:none; place-items:center; padding: 20px;
-      color: #fff; background: #000; text-align: center; font-family: system-ui, sans-serif;
-    }
-    .ui {
-      position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 14px;
-      display: flex; justify-content: center; pointer-events: none;
-      font-family: system-ui, sans-serif;
-    }
-    .ui span {
-      background: rgba(0,0,0,.45); color: #fff; border-radius: 12px; padding: 8px 12px;
-      pointer-events: auto; font-size: 14px; backdrop-filter: blur(6px);
-    }
+    html, body { margin: 0; height: 100%; background:#000; overflow: hidden; }
+    .hint { position: fixed; left:0; right:0; bottom:10px; text-align:center; color:#fff;
+            font-family: system-ui, sans-serif; font-size:14px; opacity:.8; }
   </style>
 </head>
 <body>
-  <div id="unsupported">
-    <div>
-      <h2>AR not supported</h2>
-      <p>This demo needs a WebXR-capable browser over HTTPS (iOS 17+/Safari or recent Chrome/Android).</p>
-    </div>
-  </div>
+  <div class="hint">Tap “Enter AR” and move your phone a bit.</div>
 
-  <!-- Markerless AR scene -->
+  <!-- Keep it simple: no dom-overlay, no hit-test required -->
   <a-scene
-    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true; antialias: true"
-    xr-mode-ui="enabled: true"              <!-- shows an “Enter AR” button -->
-    webxr="mode: ar; optionalFeatures: local-floor,dom-overlay; overlayElement: #hud"
     embedded
+    renderer="alpha:true; antialias:true; physicallyCorrectLights:true; colorManagement:true"
+    xr-mode-ui="enabled: true"
+    webxr="optionalFeatures: local-floor"
   >
-    <!-- Light so text is visible in all conditions -->
-    <a-entity light="type: ambient; intensity: 1"></a-entity>
-
     <!-- Camera -->
     <a-entity id="cameraRig">
-      <a-entity id="camera" camera look-controls wasd-controls="enabled:false"></a-entity>
+      <a-entity id="camera" camera look-controls></a-entity>
     </a-entity>
 
-    <!-- Cyan 3D text ~1.2m in front of camera; faces camera (billboard) -->
-    <a-entity
-      id="pubmaticText"
-      position="0 0 -1.2"
-      rotation="0 0 0"
-      scale="1.6 1.6 1.6"
-      face-camera
-      text="value: PubMatic; align: center; color: #00FFFF; width: 2.5; anchor: center; baseline: center"
-    ></a-entity>
+    <!-- Ambient light so text is always visible -->
+    <a-entity light="type: ambient; intensity: 1"></a-entity>
 
-    <!-- Optional unobtrusive HUD container for dom-overlay -->
-    <div id="hud" class="ui"><span>Move your phone to place “PubMatic” in space.</span></div>
+    <!-- Placeholder text: will be repositioned to 1.2m in front on AR start -->
+    <a-entity
+      id="pubText"
+      text="value: PubMatic; align: center; color: #00FFFF; width: 2.5; anchor: center; baseline: center"
+      position="0 0 -1.2"
+      scale="1.6 1.6 1.6"
+    ></a-entity>
   </a-scene>
 
   <script>
-    // Simple billboard so the text always faces the viewer
-    AFRAME.registerComponent('face-camera', {
-      tick: function () {
-        const cam = this.el.sceneEl.camera;
-        if (!cam) return;
-        this.el.object3D.lookAt(cam.position);
-      }
-    });
+    // On entering AR, place the text ~1.2m in front of the camera in world space.
+    const scene = document.querySelector('a-scene');
+    const textEl = document.getElementById('pubText');
 
-    // Graceful support check
-    (function ensureSupport() {
-      const supported = navigator.xr && navigator.xr.isSessionSupported;
-      if (!supported) {
-        document.getElementById('unsupported').style.display = 'grid';
-      } else {
-        navigator.xr.isSessionSupported('immersive-ar').then(ok => {
-          if (!ok) document.getElementById('unsupported').style.display = 'grid';
-        }).catch(() => {
-          document.getElementById('unsupported').style.display = 'grid';
+    function placeInFront() {
+      const cam = scene.camera;
+      if (!cam) return;
+      // Direction the camera is looking
+      const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion).normalize();
+      const pos = cam.getWorldPosition(new THREE.Vector3());
+      // 1.2 meters in front
+      const target = pos.clone().add(dir.multiplyScalar(1.2));
+      // Optional: keep at roughly chest height
+      target.y = Math.max(target.y, pos.y - 0.1);
+
+      textEl.object3D.position.copy(target);
+      // Make the text face the camera once at placement
+      textEl.object3D.lookAt(pos);
+    }
+
+    // A-Frame fires 'enter-vr' for both VR and AR; check if it's AR
+    scene.addEventListener('enter-vr', () => {
+      const xrSession = scene.renderer.xr.getSession && scene.renderer.xr.getSession();
+      if (xrSession && xrSession.environmentBlendMode === 'additive' || xrSession?.mode === 'immersive-ar') {
+        // Place once at session start
+        placeInFront();
+        // Re-adjust slightly as tracking stabilizes
+        let n = 0;
+        const id = scene.sceneEl.renderer.setAnimationLoop(() => {
+          placeInFront();
+          if (++n > 20) scene.sceneEl.renderer.setAnimationLoop(null);
         });
       }
-    })();
+    });
   </script>
 </body>
 </html>
