@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dehaati - Traditionally Authentic Maharashtrian Cuisine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Abhaya+Libre:wght@400;600;700;800&family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --terracotta: #C84B31;
+            --deep-brown: #2D2424;
+            --warm-cream: #FFF4E6;
+            --mustard: #D4A574;
+            --earth-green: #5C6F68;
+            --burnt-orange: #DC7633;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hind', sans-serif;
+            background: var(--warm-cream);
+            color: var(--deep-brown);
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--terracotta) 0%, var(--burnt-orange) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
+            pointer-events: none;
+        }
+
+        .farmer-visual {
+            position: relative;
+            margin-bottom: 2rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .peacock-badge {
+            background: var(--warm-cream);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            border: 4px solid var(--deep-brown);
+        }
+
+        .peacock-badge::after {
+            content: '';
+            position: absolute;
+            width: 135px;
+            height: 135px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+
+        .badge-text-top {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--deep-brown);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .peacock-icon {
+            font-size: 2.5rem;
+            margin: 0.25rem 0;
+        }
+
+        .badge-text-bottom {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--deep-brown);
+        }
+
+        .dehaati-logo {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: white;
+            text-align: center;
+            line-height: 1;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            text-shadow: 
+                3px 3px 0 var(--deep-brown),
+                -1px -1px 0 var(--deep-brown),
+                1px -1px 0 var(--deep-brown),
+                -1px 1px 0 var(--deep-brown),
+                1px 1px 0 var(--deep-brown),
+                0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .logo-subtitle {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 
+                2px 2px 0 var(--deep-brown),
+                -1px -1px 0 var(--deep-brown),
+                1px -1px 0 var(--deep-brown),
+                -1px 1px 0 var(--deep-brown),
+                1px 1px 0 var(--deep-brown);
+        }
+
+        .tagline {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            color: var(--warm-cream);
+            text-align: center;
+            margin-top: 1rem;
+            font-style: italic;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            max-width: 500px;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Hind', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--deep-brown);
+            color: var(--warm-cream);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: var(--warm-cream);
+            color: var(--terracotta);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 4rem 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--mustard);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* Location Section */
+        .location-section {
+            background: white;
+        }
+
+        .location-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: var(--warm-cream);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid var(--terracotta);
+        }
+
+        .info-card h3 {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.5rem;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            line-height: 1.8;
+            color: var(--deep-brown);
+        }
+
+        .info-card a {
+            color: var(--terracotta);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .hours-list {
+            list-style: none;
+        }
+
+        .hours-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        .closed {
+            color: var(--terracotta);
+            font-weight: 600;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Speciality Section */
+        .speciality-section {
+            background: linear-gradient(to bottom, white, var(--warm-cream));
+            overflow: hidden;
+        }
+
+        .speciality-scroll {
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 0;
+        }
+
+        .scroll-container {
+            display: flex;
+            gap: 1.5rem;
+            animation: scroll 30s linear infinite;
+            width: max-content;
+        }
+
+        .scroll-container:hover {
+            animation-play-state: paused;
+        }
+
+        .dish-card {
+            flex-shrink: 0;
+            width: 300px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .dish-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--mustard), var(--burnt-orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dish-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+        }
+
+        .dish-info {
+            padding: 1.5rem;
+        }
+
+        .dish-name {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            margin-bottom: 0.5rem;
+        }
+
+        .dish-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--deep-brown);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            background: var(--deep-brown);
+            color: var(--warm-cream);
+        }
+
+        .menu-section .section-title {
+            color: var(--warm-cream);
+        }
+
+        .menu-section .section-title::after {
+            background: var(--terracotta);
+        }
+
+        .menu-categories {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .menu-category {
+            margin-bottom: 3rem;
+        }
+
+        .category-title {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.8rem;
+            color: var(--mustard);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--terracotta);
+        }
+
+        .menu-item {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: var(--terracotta);
+            transform: translateX(5px);
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            flex: 1;
+        }
+
+        .item-price {
+            color: var(--mustard);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-left: 1rem;
+        }
+
+        .item-description {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .menu-item.active .item-description {
+            display: block;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .expand-icon {
+            color: var(--terracotta);
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item.active .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Catering Section */
+        .catering-section {
+            background: var(--warm-cream);
+        }
+
+        .catering-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .catering-intro {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: var(--deep-brown);
+        }
+
+        .catering-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.3rem;
+            color: var(--terracotta);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            color: var(--deep-brown);
+            line-height: 1.6;
+        }
+
+        /* Delivery Section */
+        .delivery-section {
+            background: white;
+            padding: 3rem 1.5rem;
+        }
+
+        .delivery-partners {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .partner-card {
+            background: var(--warm-cream);
+            padding: 2rem 1rem;
+            border-radius: 15px;
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            transition: transform 0.3s ease;
+        }
+
+        .partner-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--deep-brown);
+            color: var(--warm-cream);
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 2rem;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+
+        .footer-tagline {
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--mustard);
+        }
+
+        .social-links {
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            color: var(--warm-cream);
+            margin: 0 1rem;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--terracotta);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-300px * 4 - 1.5rem * 4));
+            }
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .location-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .catering-features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .partners-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .map-container {
+                height: 450px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            section {
+                padding: 5rem 2rem;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+
+            .location-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="farmer-visual">
+            <div class="logo-container">
+                <div class="peacock-badge">
+                    <span class="badge-text-top">Authentic</span>
+                    <div class="peacock-icon">🦚</div>
+                    <span class="badge-text-bottom">Maharashtrian</span>
+                </div>
+                <div class="dehaati-logo">DEHAATI</div>
+                <div class="logo-subtitle">INDIAN CUISINE</div>
+            </div>
+        </div>
+        <h1 class="tagline">Traditionally Authentic</h1>
+        <p class="subtitle">Traditional taste. Clean, light, and healthy.</p>
+        <div class="quick-actions">
+            <a href="#menu" class="btn btn-primary">View Menu</a>
+            <a href="tel:+14088880000" class="btn btn-secondary">Book Table</a>
+        </div>
+    </section>
+
+    <!-- Location & Hours Section -->
+    <section id="location" class="location-section">
+        <h2 class="section-title">Visit Us</h2>
+        <div class="location-content">
+            <div class="location-grid">
+                <div class="info-card">
+                    <h3>📍 Location</h3>
+                    <p>
+                        123 Main Street<br>
+                        Sunnyvale, CA 94086<br>
+                        United States
+                    </p>
+                </div>
+                <div class="info-card">
+                    <h3>📞 Contact</h3>
+                    <p>
+                        <a href="tel:+14088880000">+1 (408) 888-0000</a><br>
+                        <a href="/cdn-cgi/l/email-protection#d6bfb8b0b996b2b3beb7b7a2bff8b5b9bb"><span class="__cf_email__" data-cfemail="670e0901082703020f0606130e4904080a">[email&#160;protected]</span></a>
+                    </p>
+                </div>
+                <div class="info-card">
+                    <h3>🕐 Hours</h3>
+                    <ul class="hours-list">
+                        <li><span class="closed">Monday:</span> Closed</li>
+                        <li>Tuesday - Sunday: 11:00 AM - 9:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.598453945273!2d-122.01125920000001!3d37.3520141!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb5001fa90543%3A0x7da78a4647b9fc2c!2sDehaati%20Authentic%20Indian%20Maharashtrian%20Cuisine!5e0!3m2!1sen!2sus!4v1770068870760!5m2!1sen!2sus"
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Dehaati Restaurant Location">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Speciality Section -->
+    <section id="speciality" class="speciality-section">
+        <h2 class="section-title">Our Specialities</h2>
+        <div class="speciality-scroll">
+            <div class="scroll-container">
+                <!-- Dish Cards - Duplicated for infinite scroll effect -->
+                <div class="dish-card">
+                    <div class="dish-image">🥘</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Misal Pav</h3>
+                        <p class="dish-description">A spicy curry of sprouted moth beans topped with farsan, onions, lemon, and served with pav bread. A breakfast favorite!</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <div class="dish-image">🫓</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Puran Poli</h3>
+                        <p class="dish-description">Sweet flatbread filled with a mixture of chana dal, jaggery, and cardamom. A festive delicacy that melts in your mouth.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <div class="dish-image">🍛</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Kolhapuri Chicken</h3>
+                        <p class="dish-description">Fiery red chicken curry from Kolhapur, made with a special blend of roasted spices and coconut. Bold and unforgettable.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <div class="dish-image">🥗</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Koshimbir</h3>
+                        <p class="dish-description">Fresh salad made with cucumber, tomatoes, peanuts, and coconut, tempered with mustard seeds and curry leaves.</p>
+                    </div>
+                </div>
+                <!-- Duplicate for seamless loop -->
+                <div class="dish-card">
+                    <div class="dish-image">🥘</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Misal Pav</h3>
+                        <p class="dish-description">A spicy curry of sprouted moth beans topped with farsan, onions, lemon, and served with pav bread. A breakfast favorite!</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <div class="dish-image">🫓</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Puran Poli</h3>
+                        <p class="dish-description">Sweet flatbread filled with a mixture of chana dal, jaggery, and cardamom. A festive delicacy that melts in your mouth.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <div class="dish-image">🍛</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Kolhapuri Chicken</h3>
+                        <p class="dish-description">Fiery red chicken curry from Kolhapur, made with a special blend of roasted spices and coconut. Bold and unforgettable.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <div class="dish-image">🥗</div>
+                    <div class="dish-info">
+                        <h3 class="dish-name">Koshimbir</h3>
+                        <p class="dish-description">Fresh salad made with cucumber, tomatoes, peanuts, and coconut, tempered with mustard seeds and curry leaves.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Restaurant Menu Section -->
+    <section id="menu" class="menu-section">
+        <h2 class="section-title">Restaurant Menu</h2>
+        <div class="menu-categories">
+            <!-- Appetizers -->
+            <div class="menu-category">
+                <h3 class="category-title">Appetizers</h3>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Vada Pav <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$6.99</span>
+                    </div>
+                    <div class="item-description">Mumbai's iconic street food - spiced potato fritter in a soft bun with chutneys</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Kanda Bhaji <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$7.99</span>
+                    </div>
+                    <div class="item-description">Crispy onion fritters made with gram flour and traditional spices</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Sabudana Vada <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$8.99</span>
+                    </div>
+                    <div class="item-description">Crispy tapioca pearl fritters with peanuts and potatoes, perfect for fasting</div>
+                </div>
+            </div>
+
+            <!-- Main Course -->
+            <div class="menu-category">
+                <h3 class="category-title">Main Course</h3>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Misal Pav <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$12.99</span>
+                    </div>
+                    <div class="item-description">Spicy sprouted moth beans curry topped with farsan, onions, and lemon, served with pav</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Kolhapuri Chicken Thali <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$16.99</span>
+                    </div>
+                    <div class="item-description">Complete meal with spicy Kolhapuri chicken, bhakri, rice, dal, vegetable, and accompaniments</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Mutton Rassa <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$18.99</span>
+                    </div>
+                    <div class="item-description">Aromatic thin mutton curry with special Kolhapuri spices, served with jowar bhakri</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Zunka Bhakar <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$11.99</span>
+                    </div>
+                    <div class="item-description">Gram flour curry with onions and spices, served with jowar flatbread - a rustic favorite</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Bharli Vangi <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$13.99</span>
+                    </div>
+                    <div class="item-description">Baby eggplants stuffed with coconut-peanut masala, served with jowar bhakri and rice</div>
+                </div>
+            </div>
+
+            <!-- Breads -->
+            <div class="menu-category">
+                <h3 class="category-title">Breads</h3>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Jowar Bhakri <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$3.99</span>
+                    </div>
+                    <div class="item-description">Traditional gluten-free sorghum flatbread, freshly made</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Puri (4 pcs) <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$4.99</span>
+                    </div>
+                    <div class="item-description">Deep-fried puffed bread, light and crispy</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Chapati (3 pcs) <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$3.99</span>
+                    </div>
+                    <div class="item-description">Soft whole wheat flatbread</div>
+                </div>
+            </div>
+
+            <!-- Sweets -->
+            <div class="menu-category">
+                <h3 class="category-title">Sweets</h3>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Puran Poli <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$8.99</span>
+                    </div>
+                    <div class="item-description">Sweet flatbread stuffed with lentil-jaggery filling, served with ghee</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Shrikhand <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$6.99</span>
+                    </div>
+                    <div class="item-description">Sweetened strained yogurt flavored with cardamom and saffron</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Modak <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$7.99</span>
+                    </div>
+                    <div class="item-description">Steamed dumplings filled with coconut and jaggery - Lord Ganesha's favorite!</div>
+                </div>
+            </div>
+
+            <!-- Beverages -->
+            <div class="menu-category">
+                <h3 class="category-title">Beverages</h3>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Masala Chai <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$3.99</span>
+                    </div>
+                    <div class="item-description">Traditional spiced tea brewed with aromatic spices and milk</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Solkadhi <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$4.99</span>
+                    </div>
+                    <div class="item-description">Pink digestive drink made from kokum and coconut milk</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="item-name">Buttermilk (Taak) <span class="expand-icon">▼</span></span>
+                        <span class="item-price">$3.99</span>
+                    </div>
+                    <div class="item-description">Refreshing spiced yogurt drink, perfect with spicy food</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catering Section -->
+    <section id="catering" class="catering-section">
+        <h2 class="section-title">Catering Services</h2>
+        <div class="catering-content">
+            <p class="catering-intro">
+                Bring the authentic taste of Maharashtra to your next event! We offer customized catering packages for weddings, corporate events, parties, and celebrations of all sizes.
+            </p>
+            <div class="catering-features">
+                <div class="feature-card">
+                    <div class="feature-icon">🎉</div>
+                    <h3 class="feature-title">Event Catering</h3>
+                    <p class="feature-text">Full-service catering for 25 to 500+ guests with traditional Maharashtrian spread</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍱</div>
+                    <div class="feature-title">Custom Menus</div>
+                    <p class="feature-text">Tailored menus to suit your preferences, dietary needs, and budget</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🍳</div>
+                    <div class="feature-title">Live Cooking</div>
+                    <p class="feature-text">Interactive live cooking stations for an authentic experience</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-title">Bulk Orders</div>
+                    <p class="feature-text">Office lunches, party trays, and large quantity orders available</p>
+                </div>
+            </div>
+            <div style="margin-top: 2rem;">
+                <a href="tel:+14088880000" class="btn btn-primary">Call for Catering Quote</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delivery Partners Section -->
+    <section id="delivery" class="delivery-section">
+        <h2 class="section-title">Order Online</h2>
+        <div class="delivery-partners">
+            <p style="margin-bottom: 2rem; font-size: 1.1rem;">Can't visit us? Order through our delivery partners!</p>
+            <div class="partners-grid">
+                <div class="partner-card">🚗 Uber Eats</div>
+                <div class="partner-card">🛵 DoorDash</div>
+                <div class="partner-card">🍔 Grubhub</div>
+                <div class="partner-card">🥡 Postmates</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">DEHAATI</div>
+            <p class="footer-tagline">Indian Cuisine - Traditionally Authentic</p>
+            <p style="margin: 1rem 0;">
+                From the heart of Maharashtrian homes to Sunnyvale,<br>
+                authentic taste you know and love.
+            </p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook">📘</a>
+                <a href="#" aria-label="Instagram">📷</a>
+                <a href="#" aria-label="Twitter">🐦</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
+                &copy; 2026 Dehaati Restaurant. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Menu item expand/collapse
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Close all other items
+                document.querySelectorAll('.menu-item').forEach(otherItem => {
+                    if (otherItem !== this) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                // Toggle current item
+                this.classList.toggle('active');
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if
