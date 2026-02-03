@@ -15,7 +15,7 @@
             --mustard: #D4A574;
             --earth-green: #5C6F68;
             --burnt-orange: #DC7633;
-        } 
+        }
 
         * {
             margin: 0;
@@ -456,18 +456,42 @@
 
         .speciality-scroll {
             position: relative;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
             padding: 2rem 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--terracotta) var(--warm-cream);
+        }
+
+        .speciality-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .speciality-scroll::-webkit-scrollbar-track {
+            background: var(--warm-cream);
+            border-radius: 4px;
+        }
+
+        .speciality-scroll::-webkit-scrollbar-thumb {
+            background: var(--terracotta);
+            border-radius: 4px;
+        }
+
+        .speciality-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--burnt-orange);
         }
 
         .scroll-container {
             display: flex;
             gap: 1.5rem;
-            animation: scroll 30s linear infinite;
             width: max-content;
+            padding: 0 1rem;
+            animation: scroll 30s linear infinite;
         }
 
-        .scroll-container:hover {
+        .scroll-container.paused {
             animation-play-state: paused;
         }
 
@@ -1773,10 +1797,53 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Specialty dish modal functionality
 const modal = document.getElementById('dishModal');
 const scrollContainer = document.getElementById('scrollContainer');
+const specialityScroll = document.querySelector('.speciality-scroll');
+
+// Auto-scroll pause/resume on user interaction
+let pauseTimeout;
+let isUserInteracting = false;
+
+function pauseAutoScroll() {
+    if (!isUserInteracting) {
+        scrollContainer.classList.add('paused');
+        isUserInteracting = true;
+    }
+    clearTimeout(pauseTimeout);
+}
+
+function resumeAutoScroll() {
+    pauseTimeout = setTimeout(() => {
+        scrollContainer.classList.remove('paused');
+        isUserInteracting = false;
+    }, 2000); // Resume after 2 seconds of no interaction
+}
+
+// Pause on hover
+if (specialityScroll) {
+    specialityScroll.addEventListener('mouseenter', pauseAutoScroll);
+    specialityScroll.addEventListener('mouseleave', resumeAutoScroll);
+    
+    // Pause on scroll (wheel, touch, drag)
+    specialityScroll.addEventListener('wheel', () => {
+        pauseAutoScroll();
+        resumeAutoScroll();
+    });
+    
+    specialityScroll.addEventListener('touchstart', pauseAutoScroll);
+    specialityScroll.addEventListener('touchmove', pauseAutoScroll);
+    specialityScroll.addEventListener('touchend', resumeAutoScroll);
+    
+    // Pause on manual scroll
+    let scrollTimeout;
+    specialityScroll.addEventListener('scroll', () => {
+        pauseAutoScroll();
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(resumeAutoScroll, 2000);
+    });
+}
 
 // Open modal with dish details
 function openModal(dishData) {
-    scrollContainer.style.animationPlayState = 'paused';
     document.getElementById('modalTitle').textContent = dishData.name;
     document.getElementById('modalPrice').textContent = dishData.price || '';
     document.getElementById('modalDescription').textContent = dishData.fullDescription;
@@ -1792,7 +1859,6 @@ function openModal(dishData) {
 function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = '';
-    scrollContainer.style.animationPlayState = 'running';
 }
 
 // Add click event to all dish cards
