@@ -64,7 +64,6 @@ body {
     transform: translate(-50%, -50%);
     width: 350px;
     height: 525px;
-    /* background-image: url('images-for-page/frame-3.png'); */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -222,20 +221,6 @@ body {
     margin-top: 0.1rem;
 }
 
-.google-logo {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #4285F4 0%, #EA4335 25%, #FBBC04 50%, #34A853 75%, #4285F4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
 .google-logo-svg {
     width: 24px;
     height: 24px;
@@ -318,84 +303,6 @@ body {
     margin: 0;
 }
 
-.peacock-badge {
-    background: var(--warm-cream);
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    position: relative;
-    border: 4px solid var(--deep-brown);
-}
-
-.peacock-badge::after {
-    content: '';
-    position: absolute;
-    width: 135px;
-    height: 135px;
-    border: 3px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    animation: rotate 20s linear infinite;
-}
-
-.badge-text-top {
-    font-family: 'Abhaya Libre', serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--deep-brown);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.peacock-icon {
-    font-size: 2.5rem;
-    margin: 0.25rem 0;
-}
-
-.badge-text-bottom {
-    font-family: 'Abhaya Libre', serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--deep-brown);
-}
-
-.dehaati-logo {
-    font-family: 'Abhaya Libre', serif;
-    font-size: 4.5rem;
-    font-weight: 800;
-    color: white;
-    text-align: center;
-    line-height: 1;
-    letter-spacing: -2px;
-    text-transform: uppercase;
-    text-shadow: 
-        3px 3px 0 var(--deep-brown),
-        -1px -1px 0 var(--deep-brown),
-        1px -1px 0 var(--deep-brown),
-        -1px 1px 0 var(--deep-brown),
-        1px 1px 0 var(--deep-brown),
-        0 5px 15px rgba(0,0,0,0.3);
-}
-
-.logo-subtitle {
-    font-family: 'Abhaya Libre', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 
-        2px 2px 0 var(--deep-brown),
-        -1px -1px 0 var(--deep-brown),
-        1px -1px 0 var(--deep-brown),
-        -1px 1px 0 var(--deep-brown),
-        1px 1px 0 var(--deep-brown);
-}
-
 .dehaati-logo-image {
     max-width: 100%;
     height: auto;
@@ -460,15 +367,6 @@ body {
     font-size: 1.2rem;
 }
 
-.about-closing {
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 1.1rem;
-    line-height: 1.7;
-    font-style: italic;
-    font-family: 'Crimson Text', serif;
-    margin-top: 1.5rem;
-}
-
 @media (max-width: 768px) {
     .about-us-section {
         margin: 1.5rem auto;
@@ -486,34 +384,6 @@ body {
     .about-features li {
         font-size: 0.95rem;
     }
-
-    .about-closing {
-        font-size: 1rem;
-    }
-}
-
-.tagline {
-    font-family: 'Crimson Text', serif;
-    font-size: 1.5rem;
-    color: var(--warm-cream);
-    text-align: center;
-    margin-top: 1rem;
-    font-style: italic;
-    animation: fadeInUp 1s ease-out 0.3s both;
-    position: relative;
-    z-index: 2;
-}
-
-.subtitle {
-    color: rgba(255,255,255,0.9);
-    font-size: 1.1rem;
-    text-align: center;
-    margin-top: 1.5rem;
-    margin-bottom: 0;
-    max-width: 500px;
-    animation: fadeInUp 1s ease-out 0.6s both;
-    position: relative;
-    z-index: 2;
 }
 
 /* Quick Actions */
@@ -539,16 +409,6 @@ body {
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
-}
-
-.btn-primary {
-    background: var(--deep-brown);
-    color: var(--warm-cream);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
 .btn-secondary {
@@ -1024,116 +884,6 @@ section {
     font-size: 0.9rem;
     color: rgba(255,255,255,0.7);
     line-height: 1.6;
-    display: none;
-}
-
-.menu-item.active .item-description {
-    display: block;
-    margin-top: 0.25rem;
-    padding-top: 0.25rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.expand-icon {
-    color: var(--terracotta);
-    margin-left: 0.5rem;
-    transition: transform 0.3s ease;
-}
-
-.menu-item.active .expand-icon {
-    transform: rotate(180deg);
-}
-
-/* Catering Section */
-.catering-section {
-    background: var(--warm-cream);
-}
-
-.catering-content {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.catering-intro {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    margin-bottom: 2rem;
-    color: var(--deep-brown);
-}
-
-.catering-features {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.feature-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    text-align: left;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-.feature-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.5rem;
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    margin-right: 1rem;
-    flex-shrink: 0;
-}
-
-.feature-title {
-    font-family: 'Abhaya Libre', serif;
-    font-size: 1.3rem;
-    color: var(--terracotta);
-    margin: 0;
-}
-
-.feature-text {
-    color: var(--deep-brown);
-    line-height: 1.6;
-}
-
-/* Delivery Section */
-.delivery-section {
-    background: white;
-    padding: 2.5rem 1.5rem;
-}
-
-.delivery-partners {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.partners-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.partner-card {
-    background: var(--warm-cream);
-    padding: 2rem 1rem;
-    border-radius: 15px;
-    font-family: 'Abhaya Libre', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--terracotta);
-    transition: transform 0.3s ease;
-}
-
-.partner-card:hover {
-    transform: scale(1.05);
 }
 
 /* Footer */
@@ -1161,22 +911,6 @@ footer {
     font-style: italic;
     margin-bottom: 1rem;
     color: var(--mustard);
-}
-
-.social-links {
-    margin: 1.5rem 0;
-}
-
-.social-links a {
-    color: var(--warm-cream);
-    margin: 0 1rem;
-    font-size: 1.5rem;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.social-links a:hover {
-    color: var(--terracotta);
 }
 
 /* Animations */
@@ -1224,14 +958,6 @@ footer {
 @media (min-width: 768px) {
     .location-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    .catering-features {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .partners-grid {
-        grid-template-columns: repeat(4, 1fr);
     }
 
     .map-container {
