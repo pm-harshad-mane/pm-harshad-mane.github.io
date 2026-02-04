@@ -1,448 +1,202 @@
-// Helper function to get item type from boolean flags
-function getItemType(item) {
-    if (item.isVegan) {
-        return 'Vegan';
-    } else if (item.isVeg) {
-        return 'Vegetarian';
-    } else if (item.isNonVeg) {
-        return 'Non-Vegetarian';
-    }
-    return 'Vegetarian'; // Default
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dehaati - Traditionally Authentic Maharashtrian Cuisine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Abhaya+Libre:wght@400;600;700;800&family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Frame Section -->
+    <section class="top-frame-section"></section>
 
-// Helper function to capitalize spice level
-function capitalizeSpiceLevel(spiceLevel) {
-    if (!spiceLevel) return 'Mild';
-    return spiceLevel.charAt(0).toUpperCase() + spiceLevel.slice(1);
-}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="farmer-visual">
+            <div class="logo-container">
+                <img src="images-for-page/dehaati-logo-in-frame.png" alt="Dehaati Logo" class="dehaati-logo-image">
+            </div>
+            <br>
+            <!-- Social Widgets Container -->
+            <div class="social-widgets-container">
+                <!-- Google Reviews Widget -->
+                <div class="google-reviews-widget">
+                <div class="google-reviews-content">
+                    <div class="google-logo-container">
+                        <svg class="google-logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                    </div>
+                    <div class="reviews-info">
+                        <div class="stars-container" id="starsContainer">
+                            <!-- Stars will be dynamically generated -->
+                        </div>
+                        <div class="rating-text" id="ratingText">
+                            <!-- Rating text will be dynamically generated -->
+                        </div>
+                    </div>
+                </div>
+                <div class="google-reviews-footer">
+                    <p class="google-reviews-footer-text">Google Reviews</p>
+                </div>
+                </div>
+                <!-- Instagram Widget -->
+                <div class="instagram-widget">
+                    <div class="instagram-content">
+                        <div class="instagram-logo-container">
+                            <svg class="instagram-logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#f09433;stop-opacity:1" />
+                                        <stop offset="25%" style="stop-color:#e6683c;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#dc2743;stop-opacity:1" />
+                                        <stop offset="75%" style="stop-color:#cc2366;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#bc1888;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="url(#instagram-gradient)"/>
+                            </svg>
+                        </div>
+                        <div class="instagram-info">
+                            <div class="instagram-text">99 Followers</div>
+                        </div>
+                    </div>
+                    <div class="instagram-footer">
+                        <p class="instagram-footer-text">Instagram</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="about-us-section">
+            <p class="about-intro">From the heart of Maharashtrian homes to Sunnyvale, Dehaati brings regional, authentic taste you know and love. Our spices, flavors, and cooking process are exactly the same as the way we cook at home, so you can enjoy traditional taste and still feel light after eating.</p>
+            <h3 class="about-subtitle">What we offer</h3>
+            <ul class="about-features">        
+                <li>Freshly cooked every day in small batches</li>
+                <li>Organic meats & Premium quality ingredients</li>
+                <li>Highest standards of hygiene in every step</li>
+                <li>No artificial colors, no preservatives, no Ajinomoto (MSG)</li>
+                <li>Home-style breads made fresh</li>
+                <li>Gluten free jowar bhakari option</li>
+            </ul>            
+        </div>
+        <div class="quick-actions">
+            <a href="#speciality" class="btn btn-secondary">Our Speciality</a>
+            <a href="#menu" class="btn btn-secondary">Dining Menu</a>
+            <a href="#menu" class="btn btn-secondary">Order Online</a>
+        </div>
+    </section>
 
-// Render menu from diningMenu data
-function renderMenu() {
-    const menuContainer = document.getElementById('menuCategories');
-    if (!menuContainer || !diningMenu) return;
-    
-    menuContainer.innerHTML = '';
-    
-    diningMenu.forEach(category => {
-        // Skip category if hideCategory is true
-        if (category.hideCategory === true) return;
-        
-        // Filter items that should be displayed
-        const displayedItems = category.menuItems.filter(item => item.isDisplayed);
-        
-        if (displayedItems.length === 0) return;
-        
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'menu-category';
-        
-        // Create category title
-        const categoryTitle = document.createElement('h3');
-        categoryTitle.className = 'category-title';
-        categoryTitle.textContent = category.categoryTitle;
-        
-        // Add special note for Thali category
-        if (category.categoryTitle === 'Thali') {
-            const note = document.createElement('span');
-            note.style.cssText = 'font-size: 0.9rem; font-weight: normal; opacity: 0.8;';
-            note.textContent = ' (Ask refill for Rassa & Breads)';
-            categoryTitle.appendChild(note);
-        }
-        
-        categoryDiv.appendChild(categoryTitle);
-        
-        // Create menu items
-        displayedItems.forEach(menuItem => {
-            const menuItemDiv = document.createElement('div');
-            menuItemDiv.className = 'menu-item';
-            
-            // Store menu item data for modal
-            menuItemDiv.dataset.menuItem = JSON.stringify(menuItem);
-            
-            const headerDiv = document.createElement('div');
-            headerDiv.className = 'menu-item-header';
-            
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'item-name';
-            nameSpan.textContent = menuItem.title;
-            
-            const priceSpan = document.createElement('span');
-            priceSpan.className = 'item-price';
-            priceSpan.textContent = `$${menuItem.cost.toFixed(2)}`;
-            
-            headerDiv.appendChild(nameSpan);
-            headerDiv.appendChild(priceSpan);
-            
-            const descDiv = document.createElement('div');
-            descDiv.className = 'item-description';
-            descDiv.textContent = menuItem.description;
-            
-            menuItemDiv.appendChild(headerDiv);
-            menuItemDiv.appendChild(descDiv);
-            
-            // Add click handler only if hasModal is true
-            if (menuItem.hasModal) {
-                menuItemDiv.style.cursor = 'pointer';
-                menuItemDiv.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const itemData = JSON.parse(this.dataset.menuItem);
-                    openModal(itemData);
-                });
-            }
-            
-            categoryDiv.appendChild(menuItemDiv);
-        });
-        
-        menuContainer.appendChild(categoryDiv);
-    });
-}
+    <!-- Location & Hours Section -->
+    <section id="location" class="location-section">
+        <h2 class="section-title">Visit Us</h2>
+        <div class="location-content">
+            <div class="location-grid">                
+                <div class="info-card">
+                    <h3>📞 Contact</h3>
+                    <p>
+                        <a href="tel:+14086852054">+1 (408) 685-2054</a><br>                        
+                    </p>
+                </div>
+                <div class="info-card">
+                    <h3>🕐 Hours</h3>
+                    <ul class="hours-list">
+                        <li><span class="closed">Monday:</span> Closed</li>
+                        <li>Tuesday - Sunday: 11:00 AM - 9:00 PM</li>
+                    </ul>
+                </div>
+                <div class="info-card clickable" data-url="https://maps.app.goo.gl/g7Q5voc2tPtrQvqN8">
+                    <h3>📍 Location</h3>                    
+                    <p>
+                        954 E El Camino Real<br>
+                        Sunnyvale, CA 94087<br>
+                        United States
+                    </p>
+                </div>
+            </div>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.598453945273!2d-122.01125920000001!3d37.3520141!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb5001fa90543%3A0x7da78a4647b9fc2c!2sDehaati%20Authentic%20Indian%20Maharashtrian%20Cuisine!5e0!3m2!1sen!2sus!4v1770068870760!5m2!1sen!2sus"
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Dehaati Restaurant Location">
+                </iframe>
+            </div>
+        </div>
+    </section>
 
+    <!-- Our Speciality Section -->
+    <section id="speciality" class="speciality-section">
+        <h2 class="section-title">Our Specialities</h2>
+        <div class="speciality-scroll">
+            <div class="scroll-container" id="scrollContainer">
+                <!-- Speciality items will be dynamically rendered from menu-dining.js -->
+            </div>
+        </div>
+    </section>
 
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
+    <!-- Dining Menu Section -->
+    <section id="menu" class="menu-section">
+        <h2 class="section-title">Dining Menu</h2>
+        <div class="menu-categories" id="menuCategories">
+            <!-- Menu will be dynamically rendered from menu-dining.js -->
+        </div>
+    </section>
 
-// Specialty dish modal functionality
-const modal = document.getElementById('dishModal');
-const scrollContainer = document.getElementById('scrollContainer');
-const specialityScroll = document.querySelector('.speciality-scroll');
+    <!-- Specialty Modal -->
+    <div id="dishModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-video" id="modalVideo">
+                <!-- Video/Image placeholder -->
+            </div>
+            <div class="modal-body">
+                <div class="modal-title-header" id="modalTitleHeader">
+                    <h2 class="modal-title" id="modalTitle"></h2>
+                    <span class="modal-title-price" id="modalPrice"></span>
+                </div>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-details">
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Spice Level:</span>
+                        <span class="modal-detail-value" id="modalSpice"></span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Type:</span>
+                        <span class="modal-detail-value" id="modalType"></span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Region:</span>
+                        <span class="modal-detail-value" id="modalRegion"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-// Auto-scroll pause/resume on user interaction
-let pauseTimeout;
-let isUserInteracting = false;
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">DEHAATI</div>
+            <p class="footer-tagline">Indian Cuisine - Traditionally Authentic</p>
+            <p style="margin: 1rem 0;">
+                From the heart of Maharashtrian homes to Sunnyvale,<br>
+                authentic taste you know and love.
+            </p>
+            <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
+                &copy; 2026 Dehaati Restaurant. All rights reserved.
+            </p>
+        </div>
+    </footer>
 
-function pauseAutoScroll() {
-    if (!isUserInteracting) {
-        scrollContainer.classList.add('paused');
-        isUserInteracting = true;
-    }
-    clearTimeout(pauseTimeout);
-}
-
-function resumeAutoScroll() {
-    pauseTimeout = setTimeout(() => {
-        scrollContainer.classList.remove('paused');
-        isUserInteracting = false;
-    }, 2000); // Resume after 2 seconds of no interaction
-}
-
-// Pause on hover
-if (specialityScroll) {
-    specialityScroll.addEventListener('mouseenter', pauseAutoScroll);
-    specialityScroll.addEventListener('mouseleave', resumeAutoScroll);
-    
-    // Pause on scroll (wheel, touch, drag)
-    specialityScroll.addEventListener('wheel', () => {
-        pauseAutoScroll();
-        resumeAutoScroll();
-    });
-    
-    specialityScroll.addEventListener('touchstart', pauseAutoScroll);
-    specialityScroll.addEventListener('touchmove', pauseAutoScroll);
-    specialityScroll.addEventListener('touchend', resumeAutoScroll);
-    
-    // Pause on manual scroll
-    let scrollTimeout;
-    specialityScroll.addEventListener('scroll', () => {
-        pauseAutoScroll();
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(resumeAutoScroll, 2000);
-    });
-}
-
-// Helper function to get emoji based on item type/category
-function getItemEmoji(menuItem) {
-    // If there's an image or video, return empty (will be handled separately)
-    if (menuItem.imageLink || menuItem.videoLink) return '';
-    
-    // Default emojis based on category or item type
-    const titleLower = menuItem.title.toLowerCase();
-    if (titleLower.includes('chicken')) return '🍛';
-    if (titleLower.includes('mutton')) return '🍖';
-    if (titleLower.includes('prawn')) return '🦐';
-    if (titleLower.includes('thali')) return '🍽️';
-    if (titleLower.includes('pav') || titleLower.includes('vada')) return '🥘';
-    if (titleLower.includes('poli') || titleLower.includes('bread')) return '🫓';
-    if (titleLower.includes('rice') || titleLower.includes('pulav')) return '🍚';
-    if (titleLower.includes('lassi') || titleLower.includes('sarbat')) return '🥤';
-    if (titleLower.includes('solkadhi')) return '🥤';
-    if (menuItem.isVeg && !menuItem.isNonVeg) return '🥗';
-    return '🍽️'; // Default emoji
-}
-
-// Open modal with dish details
-function openModal(dishData) {
-    document.getElementById('modalTitle').textContent = dishData.title;
-    document.getElementById('modalPrice').textContent = `$${dishData.cost.toFixed(2)}`;
-    document.getElementById('modalDescription').textContent = dishData.description;
-    document.getElementById('modalSpice').textContent = capitalizeSpiceLevel(dishData.spiceLevel);
-    document.getElementById('modalType').textContent = getItemType(dishData);
-    document.getElementById('modalRegion').textContent = dishData.region;
-    
-    // Handle image/video or emoji
-    const videoContainer = document.getElementById('modalVideo');
-    if (dishData.videoLink) {
-        videoContainer.innerHTML = `<video width="100%" height="100%" controls style="object-fit: cover;"><source src="${dishData.videoLink}" type="video/mp4"></video>`;
-    } else if (dishData.imageLink) {
-        videoContainer.innerHTML = `<img src="${dishData.imageLink}" alt="${dishData.title}" style="width: 100%; height: 100%; object-fit: cover;">`;
-    } else {
-        const emoji = getItemEmoji(dishData);
-        videoContainer.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 4rem; color: rgba(255,255,255,0.7);">${emoji}</div>`;
-    }
-    
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-// Close modal
-function closeModal() {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Render speciality section from diningMenu
-function renderSpeciality() {
-    const scrollContainer = document.getElementById('scrollContainer');
-    if (!scrollContainer || !diningMenu) return;
-    
-    // Collect all speciality items
-    const specialityItems = [];
-    diningMenu.forEach(category => {
-        category.menuItems.forEach(item => {
-            if (item.isSpeciality && item.isDisplayed) {
-                specialityItems.push(item);
-            }
-        });
-    });
-    
-    if (specialityItems.length === 0) {
-        scrollContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--deep-brown);">No speciality items available.</div>';
-        return;
-    }
-    
-    scrollContainer.innerHTML = '';
-    
-    // Create dish cards (duplicate for infinite scroll effect)
-    const createDishCard = (item) => {
-        const card = document.createElement('div');
-        card.className = 'dish-card';
-        card.dataset.menuItem = JSON.stringify(item);
-        
-        const emoji = getItemEmoji(item);
-        
-        const imageDiv = document.createElement('div');
-        imageDiv.className = 'dish-image';
-        if (item.imageLink) {
-            imageDiv.innerHTML = `<img src="${item.imageLink}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">`;
-        } else if (item.videoLink) {
-            imageDiv.innerHTML = `<video width="100%" height="100%" style="object-fit: cover;" muted><source src="${item.videoLink}" type="video/mp4"></video>`;
-        } else {
-            imageDiv.textContent = emoji;
-        }
-        
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'dish-info';
-        
-        const nameH3 = document.createElement('h3');
-        nameH3.className = 'dish-name';
-        nameH3.textContent = item.title;
-        
-        const descP = document.createElement('p');
-        descP.className = 'dish-description';
-        descP.textContent = item.description;
-        
-        infoDiv.appendChild(nameH3);
-        infoDiv.appendChild(descP);
-        
-        card.appendChild(imageDiv);
-        card.appendChild(infoDiv);
-        
-        // Add click handler
-        card.addEventListener('click', function() {
-            const itemData = JSON.parse(this.dataset.menuItem);
-            openModal(itemData);
-        });
-        
-        return card;
-    };
-    
-    // Add original cards
-    specialityItems.forEach(item => {
-        scrollContainer.appendChild(createDishCard(item));
-    });
-    
-    // Duplicate cards for seamless infinite scroll
-    specialityItems.forEach(item => {
-        scrollContainer.appendChild(createDishCard(item));
-    });
-    
-    // Update scroll animation based on number of items
-    const itemCount = specialityItems.length;
-    if (itemCount > 0) {
-        const cardWidth = 300; // Match CSS width
-        const gap = 24; // Match CSS gap (1.5rem)
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes scroll {
-                0% {
-                    transform: translateX(0);
-                }
-                100% {
-                    transform: translateX(calc(-${cardWidth}px * ${itemCount} - ${gap}px * ${itemCount}));
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-}
-
-// Close modal when clicking outside
-modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-        closeModal();
-    }
-});
-
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closeModal();
-    }
-});
-
-// Google Reviews Widget - Dynamic Star Rating
-function initializeGoogleReviewsWidget() {
-    const widget = document.querySelector('.google-reviews-widget');
-    if (!widget || !GoogleReviewWidget) return;
-
-    // Use data from social.js
-    const rating = parseFloat(GoogleReviewWidget.rating) || 0;
-    const reviews = parseInt(GoogleReviewWidget.reviews) || 0;
-    const url = GoogleReviewWidget.url || '';
-    
-    const starsContainer = widget.querySelector('#starsContainer');
-    const ratingText = widget.querySelector('#ratingText');
-    
-    if (!starsContainer || !ratingText) return;
-
-    // Clear existing stars
-    starsContainer.innerHTML = '';
-
-    // Generate stars based on rating
-    const fullStars = Math.floor(rating);
-    const decimalPart = rating % 1;
-    const hasPartialStar = decimalPart > 0;
-    
-    for (let i = 0; i < 5; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        
-        if (i < fullStars) {
-            star.classList.add('filled');
-        } else if (i === fullStars && hasPartialStar) {
-            star.classList.add('partial-filled');
-            const starPartial = document.createElement('div');
-            starPartial.className = 'star-partial';
-            // Calculate pixel width based on decimal part (e.g., 0.6 = 60% of 21px = 12.6px)
-            const starWidth = 21; // Match the star width from CSS
-            const pixelWidth = starWidth * decimalPart;
-            starPartial.style.width = `${pixelWidth}px`;
-            starPartial.style.height = '21px';
-            star.appendChild(starPartial);
-        }
-        
-        starsContainer.appendChild(star);
-    }
-
-    // Set rating text
-    const reviewsText = reviews === 1 ? 'review' : 'reviews';
-    ratingText.textContent = `${rating.toFixed(1)} Stars, ${reviews} ${reviewsText}`;
-
-    // Add click handler to navigate to Google Reviews URL
-    if (url) {
-        widget.addEventListener('click', function() {
-            window.open(url, '_blank');
-        });
-    }
-}
-
-// Instagram Widget - Click Handler
-function initializeInstagramWidget() {
-    const widget = document.querySelector('.instagram-widget');
-    if (!widget || !InstagramWidget) return;
-
-    // Use data from social.js
-    const url = InstagramWidget.url || '';
-    const followers = InstagramWidget.followers || 0;
-    
-    // Update followers count
-    const followersText = widget.querySelector('.instagram-text');
-    if (followersText) {
-        const followersLabel = followers === 1 ? 'Follower' : 'Followers';
-        followersText.textContent = `${followers} ${followersLabel}`;
-    }
-    
-    // Add click handler to navigate to Instagram URL
-    if (url) {
-        widget.addEventListener('click', function() {
-            window.open(url, '_blank');
-        });
-    }
-}
-
-// Clickable Info Cards - Click Handler
-function initializeClickableInfoCards() {
-    const clickableCards = document.querySelectorAll('.info-card.clickable');
-    clickableCards.forEach(card => {
-        const url = card.getAttribute('data-url');
-        if (url) {
-            card.addEventListener('click', function() {
-                window.open(url, '_blank');
-            });
-        }
-    });
-}
-
-// Initialize widgets on page load
-document.addEventListener('DOMContentLoaded', function() {
-    initializeGoogleReviewsWidget();
-    initializeInstagramWidget();
-    initializeClickableInfoCards();
-    renderMenu(); // Render menu from menu-dining.js
-    renderSpeciality(); // Render speciality section from menu-dining.js
-});
-
-// Back to Top Button
-const backToTopButton = document.createElement('a');
-backToTopButton.href = '#';
-backToTopButton.className = 'back-to-top';
-backToTopButton.innerHTML = '↑';
-backToTopButton.setAttribute('aria-label', 'Back to top');
-document.body.appendChild(backToTopButton);
-
-// Show/hide button based on scroll position
-window.addEventListener('scroll', function() {
-    if (window.pageYOffset > 300) {
-        backToTopButton.classList.add('visible');
-    } else {
-        backToTopButton.classList.remove('visible');
-    }
-});
-
-// Smooth scroll to top when clicked
-backToTopButton.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
+<script src="menu-dining.js"></script>
+<script src="social.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
