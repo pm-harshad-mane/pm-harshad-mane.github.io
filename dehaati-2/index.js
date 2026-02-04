@@ -179,37 +179,24 @@ function getItemEmoji(menuItem) {
     return '🍽️'; // Default emoji
 }
 
-// Open modal with dish details (works with both old data-attribute format and new menu item format)
+// Open modal with dish details
 function openModal(dishData) {
-    // Check if it's a menu item object or old format
-    if (dishData.title) {
-        // New format: menu item from menu-dining.js
-        document.getElementById('modalTitle').textContent = dishData.title;
-        document.getElementById('modalPrice').textContent = `$${dishData.cost.toFixed(2)}`;
-        document.getElementById('modalDescription').textContent = dishData.description;
-        document.getElementById('modalSpice').textContent = capitalizeSpiceLevel(dishData.spiceLevel);
-        document.getElementById('modalType').textContent = getItemType(dishData);
-        document.getElementById('modalRegion').textContent = dishData.region;
-        
-        // Handle image/video or emoji
-        const videoContainer = document.getElementById('modalVideo');
-        if (dishData.videoLink) {
-            videoContainer.innerHTML = `<video width="100%" height="100%" controls style="object-fit: cover;"><source src="${dishData.videoLink}" type="video/mp4"></video>`;
-        } else if (dishData.imageLink) {
-            videoContainer.innerHTML = `<img src="${dishData.imageLink}" alt="${dishData.title}" style="width: 100%; height: 100%; object-fit: cover;">`;
-        } else {
-            const emoji = getItemEmoji(dishData);
-            videoContainer.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 4rem; color: rgba(255,255,255,0.7);">${emoji}</div>`;
-        }
+    document.getElementById('modalTitle').textContent = dishData.title;
+    document.getElementById('modalPrice').textContent = `$${dishData.cost.toFixed(2)}`;
+    document.getElementById('modalDescription').textContent = dishData.description;
+    document.getElementById('modalSpice').textContent = capitalizeSpiceLevel(dishData.spiceLevel);
+    document.getElementById('modalType').textContent = getItemType(dishData);
+    document.getElementById('modalRegion').textContent = dishData.region;
+    
+    // Handle image/video or emoji
+    const videoContainer = document.getElementById('modalVideo');
+    if (dishData.videoLink) {
+        videoContainer.innerHTML = `<video width="100%" height="100%" controls style="object-fit: cover;"><source src="${dishData.videoLink}" type="video/mp4"></video>`;
+    } else if (dishData.imageLink) {
+        videoContainer.innerHTML = `<img src="${dishData.imageLink}" alt="${dishData.title}" style="width: 100%; height: 100%; object-fit: cover;">`;
     } else {
-        // Old format: data attributes (for backward compatibility)
-        document.getElementById('modalTitle').textContent = dishData.name;
-        document.getElementById('modalPrice').textContent = dishData.price || '';
-        document.getElementById('modalDescription').textContent = dishData.fullDescription || dishData.description;
-        document.getElementById('modalSpice').textContent = dishData.spice;
-        document.getElementById('modalType').textContent = dishData.type;
-        document.getElementById('modalRegion').textContent = dishData.region;
-        document.getElementById('modalVideo').innerHTML = dishData.emoji || '🍽️';
+        const emoji = getItemEmoji(dishData);
+        videoContainer.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 4rem; color: rgba(255,255,255,0.7);">${emoji}</div>`;
     }
     
     modal.classList.add('active');
@@ -303,7 +290,6 @@ function renderSpeciality() {
     if (itemCount > 0) {
         const cardWidth = 300; // Match CSS width
         const gap = 24; // Match CSS gap (1.5rem)
-        const totalWidth = (cardWidth + gap) * itemCount;
         const style = document.createElement('style');
         style.textContent = `
             @keyframes scroll {
@@ -317,28 +303,6 @@ function renderSpeciality() {
         `;
         document.head.appendChild(style);
     }
-}
-
-// Add click event to all dish cards (for backward compatibility with old format)
-function attachDishCardListeners() {
-    document.querySelectorAll('.dish-card').forEach(card => {
-        // Only attach if not already attached (check for data-menu-item)
-        if (!card.dataset.menuItem && card.dataset.name) {
-            card.addEventListener('click', function() {
-                const dishData = {
-                    name: this.dataset.name,
-                    emoji: this.dataset.emoji,
-                    price: this.dataset.price,
-                    description: this.dataset.description,
-                    fullDescription: this.dataset.fullDescription,
-                    spice: this.dataset.spice,
-                    type: this.dataset.type,
-                    region: this.dataset.region
-                };
-                openModal(dishData);
-            });
-        }
-    });
 }
 
 // Close modal when clicking outside
@@ -455,7 +419,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeClickableInfoCards();
     renderMenu(); // Render menu from menu-dining.js
     renderSpeciality(); // Render speciality section from menu-dining.js
-    attachDishCardListeners(); // Attach listeners for any remaining dish cards
 });
 
 // Back to Top Button
