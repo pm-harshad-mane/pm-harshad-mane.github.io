@@ -40,7 +40,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     padding: 2rem;
-    padding-top: 4rem;
+    padding-top: 3rem;
     overflow: hidden;
 }
 
@@ -227,6 +227,7 @@ body {
 }
 
 .reviews-info {
+    padding-top: 0.5rem;
     flex: 0 1 auto;
     min-width: 0;
 }
@@ -399,7 +400,7 @@ body {
 }
 
 .btn {
-    padding: 1rem 2rem;
+    padding: 0.75rem 1rem;
     border: none;
     border-radius: 50px;
     font-family: 'Hind', sans-serif;
@@ -689,7 +690,7 @@ section {
 
 .modal-title {
     font-family: 'Abhaya Libre', serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--terracotta);
     margin: 0;
@@ -698,7 +699,7 @@ section {
 
 .modal-title-price {
     font-family: 'Abhaya Libre', serif;
-    font-size: 1.1rem;
+    font-size: 1.32rem;
     font-weight: 700;
     color: var(--deep-brown);
     white-space: nowrap;
@@ -713,7 +714,7 @@ section {
 
 .modal-details {
     background: white;
-    padding: 1.5rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 15px;
     margin-top: 1.5rem;
 }
