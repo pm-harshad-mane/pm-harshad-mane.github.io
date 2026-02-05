@@ -77,7 +77,7 @@ function renderMenu() {
             descDiv.textContent = menuItem.description;
             
             menuItemDiv.appendChild(headerDiv);
-            menuItemDiv.appendChild(descDiv);
+            // menuItemDiv.appendChild(descDiv);
             
             // Add click handler only if hasModal is true
             if (menuItem.hasModal) {
