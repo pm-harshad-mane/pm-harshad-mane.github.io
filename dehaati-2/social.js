@@ -5,6 +5,6 @@ var GoogleReviewWidget = {
 }
 
 var InstagramWidget = {
-    followers: "99",
+    followers: "101",
     url: "https://www.instagram.com/dehaati_indiancuisine/"
 }
