@@ -1,13 +1,19 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 #root {
 	text-align: center;
+	position: relative;
 }
 .block{
-    margin: 10px;
-    padding: 15px;
-    width: 100px;
-  	height: 100px;
-  	border-radius: 50%;
-  	display: inline;
+    margin: 6px;
+    padding: 8px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .block-empty {
@@ -20,10 +26,26 @@
 
 .block-with-marble {	
 	background-image  :url(http://www.zingerbugimages.com/backgrounds/brown_marble.jpg);
-	border: 2px solid #999;
+    border: 2px solid #cfbdbd;
 }
 
 .block-with-marble-selected{
 	border-color: darkgreen;
     border-width: medium;
+}
+
+.dialog {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ffffff;
+    padding: 5px;
+    border-radius: 3px;
+    width: 200px;
+    height: 80px;
+    top: 42%;
+    box-shadow: 0px 0px 1px 1px #efefef;
+    left: calc(50% - 100px);
 }
