@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Retirement Planning Calculator</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --ink:#172033; --muted:#64748b;
+    --accent:#ffb400; --accent2:#2563eb; --good:#15803d; --border:#d8dee9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:1050px;margin:32px auto;padding:0 18px 50px}
+  h1{font-size:34px;margin:0 0 8px}
+  .sub{color:var(--muted);margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 6px 22px rgba(15,23,42,.05)}
+  .inputs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}
+  input{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:9px;font-size:16px;background:white}
+  input:focus{outline:2px solid rgba(37,99,235,.18);border-color:#2563eb}
+  .actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  button{border:0;border-radius:9px;padding:12px 18px;font-weight:700;cursor:pointer}
+  .primary{background:var(--accent);color:#111827}
+  .secondary{background:#e8eef8;color:#1e3a8a}
+  .results{display:grid;gap:14px}
+  .result{padding:17px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0}
+  .result .k{font-size:13px;color:var(--muted);margin-bottom:4px}
+  .result .v{font-size:28px;font-weight:800}
+  .result .small{font-size:12px;color:var(--muted);margin-top:4px}
+  .breakdown{margin-top:18px}
+  .row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px dashed #d7dee8}
+  .row:last-child{border-bottom:0}
+  .note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:14px}
+  .warn{padding:12px 14px;border-radius:10px;background:#fff7ed;color:#9a3412;margin-top:14px;display:none}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  th,td{padding:8px 6px;border-bottom:1px solid #e5e7eb;text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  details{margin-top:16px}
+  summary{cursor:pointer;font-weight:700}
+  @media(max-width:760px){.grid,.inputs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Retirement Planning Calculator</h1>
+  <div class="sub">Standalone replacement inspired by the NISM retirement calculator.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2 style="margin-top:0">Inputs</h2>
+      <div class="inputs">
+        <div><label>Present Age</label><input id="age" type="number" value="40" min="18" max="100"></div>
+        <div><label>Retirement Age</label><input id="retAge" type="number" value="50" min="19" max="100"></div>
+        <div><label>Life Expectancy</label><input id="life" type="number" value="85" min="20" max="120"></div>
+        <div><label>Long-Term Inflation (%)</label><input id="infl" type="number" value="5" step=".1"></div>
+        <div><label>Present Living Expenses / Month (₹)</label><input id="expense" type="number" value="50000" step="1000"></div>
+        <div><label>Reduction in Expenses After Retirement (%)</label><input id="reduction" type="number" value="0" step=".1"></div>
+        <div><label>Expected Return During Working Years (%)</label><input id="preRet" type="number" value="7" step=".1"></div>
+        <div><label>Expected Return During Retired Life (%)</label><input id="postRet" type="number" value="5" step=".1"></div>
+        <div><label>Current Retirement Savings (₹)</label><input id="savings" type="number" value="0" step="10000"></div>
+        <div><label>Retirement Benefits at Retirement (₹)</label><input id="benefits" type="number" value="0" step="10000"></div>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="calculate()">Calculate</button>
+        <button class="secondary" onclick="loadNismTest()">Test Data</button>
+      </div>
+      <div id="warn" class="warn"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Results</h2>
+      <div class="results">
+        <div class="result">
+          <div class="k">Per month amount required during retired life</div>
+          <div class="v" id="monthly">₹0</div>
+        </div>
+        <div class="result">
+          <div class="k">Corpus required at retirement</div>
+          <div class="v" id="corpus">₹0</div>
+          <div class="small" id="corpusCr"></div>
+        </div>
+        <div class="result">
+          <div class="k">Investment required per month</div>
+          <div class="v" id="sip">₹0</div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <h3>Breakdown</h3>
+        <div class="row"><span>Years to retirement</span><b id="yrsToRet">0</b></div>
+        <div class="row"><span>Years in retirement</span><b id="yrsRetired">0</b></div>
+        <div class="row"><span>Current savings at retirement</span><b id="futureSavings">₹0</b></div>
+        <div class="row"><span>Retirement benefits</span><b id="benefitOut">₹0</b></div>
+        <div class="row"><span>Funding gap at retirement</span><b id="gap">₹0</b></div>
+      </div>
+
+      <details>
+        <summary>Formula assumptions</summary>
+        <div class="note">
+          <p><b>1. Retirement monthly expense</b> = current monthly expense × (1 + inflation)<sup>years to retirement</sup> × (1 − expense reduction).</p>
+          <p><b>2. Retirement corpus</b> is calculated as the present value, at retirement, of monthly end-of-period withdrawals over the retirement years. Withdrawals are held at the retirement-start expense level, matching the simplest interpretation of NISM's stated retired-life return input.</p>
+          <p><b>3. Current retirement savings</b> compound at the working-years return until retirement. Retirement benefits are added at retirement.</p>
+          <p><b>4. Required monthly investment</b> uses an ordinary monthly annuity (contributions at month-end) to close the retirement funding gap.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2 style="margin-top:0">Retirement Corpus Projection</h2>
+    <div class="note">Illustrative annual projection after retirement, using the calculated starting corpus and annualized withdrawals.</div>
+    <div style="overflow:auto">
+      <table>
+        <thead><tr><th>Age</th><th>Opening Corpus</th><th>Return</th><th>Annual Withdrawal</th><th>Closing Corpus</th></tr></thead>
+        <tbody id="projection"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const num = id => Number($(id).value || 0);
+const fmt = x => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(x);
+const fmt0 = x => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(x);
+
+function pvAnnuity(payment, rate, n){
+  if(n <= 0) return 0;
+  if(Math.abs(rate) < 1e-12) return payment * n;
+  return payment * (1 - Math.pow(1+rate,-n)) / rate;
+}
+function fvAnnuityFactor(rate,n){
+  if(n <= 0) return 0;
+  if(Math.abs(rate) < 1e-12) return n;
+  return (Math.pow(1+rate,n)-1)/rate;
+}
+
+function calculate(){
+  const age=num('age'), retAge=num('retAge'), life=num('life');
+  const infl=num('infl')/100, exp=num('expense'), red=num('reduction')/100;
+  const pre=num('preRet')/100, post=num('postRet')/100;
+  const savings=num('savings'), benefits=num('benefits');
+  const warn=$('warn'); warn.style.display='none'; warn.textContent='';
+
+  if(retAge <= age){ warn.textContent='Retirement age must be greater than present age.'; warn.style.display='block'; return; }
+  if(life <= retAge){ warn.textContent='Life expectancy must be greater than retirement age.'; warn.style.display='block'; return; }
+  if(exp < 0 || savings < 0 || benefits < 0 || red < 0 || red >= 1){
+    warn.textContent='Please check the monetary values and expense reduction percentage.'; warn.style.display='block'; return;
+  }
+
+  const yearsToRet = retAge-age, yearsRetired=life-retAge;
+  const monthlyAtRet = exp * Math.pow(1+infl,yearsToRet) * (1-red);
+
+  const monthlyPostRate = post/12;
+  const monthsRetired = yearsRetired*12;
+  const corpus = pvAnnuity(monthlyAtRet, monthlyPostRate, monthsRetired);
+
+  const savingsAtRet = savings * Math.pow(1+pre,yearsToRet);
+  const gap = Math.max(0, corpus - savingsAtRet - benefits);
+
+  const monthlyPreRate = pre/12;
+  const monthsToRet = yearsToRet*12;
+  const factor = fvAnnuityFactor(monthlyPreRate,monthsToRet);
+  const sip = factor > 0 ? gap/factor : gap/monthsToRet;
+
+  $('monthly').textContent=fmt(monthlyAtRet);
+  $('corpus').textContent=fmt(corpus);
+  $('corpusCr').textContent=(corpus/10000000).toFixed(2)+' crore';
+  $('sip').textContent=fmt(sip);
+  $('yrsToRet').textContent=yearsToRet;
+  $('yrsRetired').textContent=yearsRetired;
+  $('futureSavings').textContent=fmt0(savingsAtRet);
+  $('benefitOut').textContent=fmt0(benefits);
+  $('gap').textContent=fmt0(gap);
+
+  buildProjection(retAge,life,corpus,monthlyAtRet,post);
+}
+
+function buildProjection(retAge,life,corpus,monthly,post){
+  let bal=corpus, body='';
+  const annualWithdrawal=monthly*12;
+  for(let age=retAge; age<life; age++){
+    const opening=bal;
+    const interest=opening*post;
+    bal=Math.max(0,opening+interest-annualWithdrawal);
+    body += `<tr><td>${age}</td><td>${fmt0(opening)}</td><td>${fmt0(interest)}</td><td>${fmt0(annualWithdrawal)}</td><td>${fmt0(bal)}</td></tr>`;
+  }
+  $('projection').innerHTML=body;
+}
+
+function loadNismTest(){
+  $('age').value=40;
+  $('retAge').value=65;
+  $('life').value=85;
+  $('infl').value=6;
+  $('expense').value=75000;
+  $('reduction').value=0;
+  $('preRet').value=8;
+  $('postRet').value=0.5;
+  $('savings').value=19500000;
+  $('benefits').value=0;
+  calculate();
+}
+calculate();
+</script>
+</body>
+</html>
